@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incident Response Playbook - Complete Security Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding-top: 80px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Navigation Styles */
+        .navbar {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-logo {
+            color: white;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 30px;
+        }
+
+        .nav-item a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-item a:hover {
+            opacity: 0.8;
+        }
+
+        .back-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .incident-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUp 0.8s ease-out forwards;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .incident-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .incident-card:nth-child(2) { animation-delay: 0.1s; }
+        .incident-card:nth-child(3) { animation-delay: 0.2s; }
+        .incident-card:nth-child(4) { animation-delay: 0.3s; }
+
+        .section-title {
+            font-size: 2em;
+            color: #dc3545;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #dc3545;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-icon {
+            font-size: 1.2em;
+            margin-right: 15px;
+            background: linear-gradient(45deg, #dc3545, #fd7e14);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .severity-high {
+            background: linear-gradient(45deg, #f8d7da 0%, #f5c6cb 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #dc3545;
+        }
+
+        .severity-high h4 {
+            color: #721c24;
+            margin-bottom: 10px;
+        }
+
+        .severity-medium {
+            background: linear-gradient(45deg, #fff3cd 0%, #ffeaa7 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #fd7e14;
+        }
+
+        .severity-medium h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .severity-low {
+            background: linear-gradient(45deg, #d4edda 0%, #c3e6cb 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #28a745;
+        }
+
+        .severity-low h4 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .timeline-container {
+            position: relative;
+            margin: 30px 0;
+        }
+
+        .timeline {
+            position: relative;
+            margin: 20px 0;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #dc3545;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-left: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -35px;
+            top: 25px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #dc3545;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #dc3545;
+        }
+
+        .timeline-time {
+            font-weight: bold;
+            color: #dc3545;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .playbook-steps {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .playbook-steps::before {
+            content: "Incident Response Commands";
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #dc3545;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .incident-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .incident-type {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid #dc3545;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            background: #f8f9fa;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+            transition: background 0.3s ease;
+        }
+
+        .checklist li:hover {
+            background: #e9ecef;
+        }
+
+        .checklist li::before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+        }
+
+        .tab {
+            background: none;
+            border: none;
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: #dc3545;
+            color: white;
+        }
+
+        .tab:hover {
+            background: rgba(220, 53, 69, 0.1);
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 0 0 10px 10px;
+            border: 1px solid #e9ecef;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .escalation-matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .escalation-level {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .level-1 { border-left: 4px solid #28a745; }
+        .level-2 { border-left: 4px solid #ffc107; }
+        .level-3 { border-left: 4px solid #fd7e14; }
+        .level-4 { border-left: 4px solid #dc3545; }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .copy-button:hover {
+            background: #c82333;
+        }
+
+        .contact-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .sla-indicator {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 5px;
+        }
+
+        .sla-critical { background: #dc3545; color: white; }
+        .sla-high { background: #fd7e14; color: white; }
+        .sla-medium { background: #ffc107; color: black; }
+        .sla-low { background: #28a745; color: white; }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">🛡️ SOC Analyst Hub</a>
+            
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html">Overview</a></li>
+                <li class="nav-item"><a href="linux-hardening.html">Linux Hardening</a></li>
+                <li class="nav-item"><a href="windows-hardening.html">Windows Hardening</a></li>
+                <li class="nav-item"><a href="jira-integration.html">Jira Integration</a></li>
+                <li class="nav-item"><a href="vulnerability-management.html">Vulnerability Mgmt</a></li>
+                <li class="nav-item"><a href="incident-response.html">Incident Response</a></li>
+            </ul>
+
+            <a href="index.html" class="back-button">← Back to Overview</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="header">
+            <h1>🚨 Incident Response Playbook</h1>
+            <p>Comprehensive Guide to Security Incident Detection, Analysis, and Response</p>
+        </header>
+
+        <div class="incident-card">
+            <h2 class="section-title">
+                <span class="section-icon">🎯</span>
+                Incident Response Framework (NIST)
+            </h2>
+            
+            <div class="severity-high">
+                <h4>🚨 Why Incident Response Matters</h4>
+                <p>The average cost of a data breach is $4.45 million. Organizations with a well-tested incident response plan can reduce breach costs by up to $2.66 million and contain incidents 54 days faster.</p>
+            </div>
+
+            <div class="timeline-container">
+                <h3>NIST Incident Response Lifecycle:</h3>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-time">Phase 1: Preparation</div>
+                        <strong>Establish IR capabilities and resources</strong>
+                        <ul>
+                            <li>Develop incident response policies and procedures</li>
+                            <li>Train incident response team members</li>
+                            <li>Deploy monitoring and detection tools</li>
+                            <li>Create communication plans and contact lists</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-time">Phase 2: Detection & Analysis</div>
+                        <strong>Identify and analyze potential incidents</strong>
+                        <ul>
+                            <li>Monitor security events and alerts</li>
+                            <li>Analyze suspicious activities</li>
+                            <li>Determine incident scope and impact</li>
+                            <li>Document initial findings</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-time">Phase 3: Containment, Eradication & Recovery</div>
+                        <strong>Stop the incident and restore operations</strong>
+                        <ul>
+                            <li>Contain the incident to prevent spread</li>
+                            <li>Eradicate threats from the environment</li>
+                            <li>Recover affected systems and services</li>
+                            <li>Validate system integrity</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-time">Phase 4: Post-Incident Activity</div>
+                        <strong>Learn and improve from the incident</strong>
+                        <ul>
+                            <li>Conduct lessons learned meetings</li>
+                            <li>Update policies and procedures</li>
+                            <li>Implement preventive measures</li>
+                            <li>Complete final incident documentation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="escalation-matrix">
+                <div class="escalation-level level-1">
+                    <h4>Level 1 - Info</h4>
+                    <div class="sla-indicator sla-low">SLA: 4 hours</div>
+                    <p>Low impact incidents handled by SOC Tier 1</p>
+                </div>
+                <div class="escalation-level level-2">
+                    <h4>Level 2 - Warning</h4>
+                    <div class="sla-indicator sla-medium">SLA: 2 hours</div>
+                    <p>Medium impact requiring Tier 2 analysis</p>
+                </div>
+                <div class="escalation-level level-3">
+                    <h4>Level 3 - Critical</h4>
+                    <div class="sla-indicator sla-high">SLA: 1 hour</div>
+                    <p>High impact requiring senior analysts</p>
+                </div>
+                <div class="escalation-level level-4">
+                    <h4>Level 4 - Emergency</h4>
+                    <div class="sla-indicator sla-critical">SLA: 15 mins</div>
+                    <p>Critical incidents requiring immediate response</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="incident-card">
+            <h2 class="section-title">
+                <span class="section-icon">🔍</span>
+                Common Incident Types and Response Procedures
+            </h2>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab(event, 'malware-response')">Malware</button>
+                <button class="tab" onclick="switchTab(event, 'phishing-response')">Phishing</button>
+                <button class="tab" onclick="switchTab(event, 'ddos-response')">DDoS</button>
+                <button class="tab" onclick="switchTab(event, 'data-breach')">Data Breach</button>
+            </div>
+
+            <div id="malware-response" class="tab-content active">
+                <h3>🦠 Malware Incident Response</h3>
+                
+                <div class="severity-high">
+                    <h4>Immediate Actions (First 15 minutes)</h4>
+                    <ul class="checklist">
+                        <li>Isolate infected systems from network</li>
+                        <li>Preserve system state for forensic analysis</li>
+                        <li>Identify malware type and behavior</li>
+                        <li>Assess lateral movement potential</li>
+                    </ul>
+                </div>
+
+                <div class="playbook-steps">
+                    <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+# Malware Incident Response Commands
+
+# 1. Network Isolation (Windows)
+netsh interface set interface "Ethernet" disabled
+# Disable network adapter to prevent spread
+
+# 2. Process Analysis
+Get-Process | Where-Object {$_.ProcessName -like "*suspicious*"}
+tasklist /svc | findstr "suspicious_process"
+
+# 3. Memory Dump for Analysis
+# Using WinPmem for memory acquisition
+winpmem.exe -o memory_dump.raw
+
+# 4. File System Analysis
+dir /s /a /od C:\ | findstr /i "malware suspicious"
+# Look for recently modified files
+
+# 5. Network Connection Analysis
+netstat -ano | findstr ESTABLISHED
+# Check for suspicious network connections
+
+# 6. Registry Analysis (Common malware locations)
+reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+reg query HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run
+
+# 7. Event Log Analysis
+wevtutil qe Security /f:text | findstr "4688 4689"
+# Check for process creation events
+
+# 8. Hash Analysis
+certutil -hashfile suspicious_file.exe SHA256
+# Calculate file hash for threat intelligence lookup
+
+# 9. Safe System Shutdown
+shutdown /s /f /t 0
+# Force shutdown to preserve evidence
+                </div>
+
+                <div class="severity-medium">
+                    <h4>🔬 Forensic Analysis Steps</h4>
+                    <ul>
+                        <li><strong>Memory Analysis:</strong> Use Volatility to analyze memory dumps</li>
+                        <li><strong>File Analysis:</strong> Submit samples to VirusTotal and sandbox environments</li>
+                        <li><strong>Network Analysis:</strong> Review firewall logs and DNS queries</li>
+                        <li><strong>Timeline Creation:</strong> Correlate events across multiple systems</li>
+                        <li><strong>IOC Extraction:</strong> Identify indicators of compromise for hunting</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="phishing-response" class="tab-content">
+                <h3>🎣 Phishing Incident Response</h3>
+                
+                <div class="severity-high">
+                    <h4>Email Security Analysis</h4>
+                    <ul class="checklist">
+                        <li>Analyze email headers and authentication records</li>
+                        <li>Examine attachments in sandbox environment</li>
+                        <li>Check URL reputation and redirect chains</li>
+                        <li>Identify affected users and scope</li>
+                    </ul>
+                </div>
+
+                <div class="playbook-steps">
+                    <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+# Phishing Incident Response Commands
+
+# 1. Email Header Analysis
+# Extract and analyze full email headers
+grep -i "received:" email_headers.txt
+grep -i "return-path:" email_headers.txt
+
+# 2. SPF/DKIM/DMARC Verification
+dig TXT suspicious-domain.com | grep -i spf
+dig TXT _dmarc.suspicious-domain.com
+
+# 3. URL Analysis (Safe methods)
+curl -I "http://suspicious-url.com" --max-time 10
+# Get headers without downloading content
+
+# 4. Exchange Online PowerShell (Office 365)
+# Search for similar phishing emails
+Get-MessageTrace -SenderAddress "attacker@suspicious.com" -StartDate (Get-Date).AddDays(-7)
+
+# Remove emails from all mailboxes
+Search-Mailbox -Identity "All" -SearchQuery 'Subject:"Urgent: Update Your Password"' -DeleteContent
+
+# 5. User Activity Analysis
+# Check for credential compromise
+Get-AzureADAuditSignInLogs | Where-Object {$_.UserPrincipalName -eq "victim@company.com"}
+
+# 6. Attachment Analysis
+file suspicious_attachment.pdf
+strings suspicious_attachment.pdf | grep -i "javascript\|eval\|script"
+
+# 7. Domain Reputation Check
+whois suspicious-domain.com
+dig suspicious-domain.com +short
+
+# 8. Block Sender (Exchange)
+New-TransportRule -Name "Block Phishing Sender" -SentTo "*@company.com" -From "attacker@suspicious.com" -RejectMessageReasonText "Blocked due to phishing attempt"
+                </div>
+
+                <div class="severity-medium">
+                    <h4>📧 User Communication Template</h4>
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 10px 0;">
+                        <strong>Subject:</strong> Security Alert - Phishing Email Detected<br><br>
+                        <strong>To All Staff:</strong><br>
+                        We have identified a phishing email with subject "[SUBJECT]" from sender "[SENDER]". If you received this email:<br>
+                        1. Do NOT click any links or download attachments<br>
+                        2. Forward the email to security@company.com<br>
+                        3. Delete the email from your inbox<br>
+                        4. If you already clicked links, contact IT immediately<br><br>
+                        <strong>Security Team</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div id="ddos-response" class="tab-content">
+                <h3>⚡ DDoS Attack Response</h3>
+                
+                <div class="severity-high">
+                    <h4>Traffic Analysis and Mitigation</h4>
+                    <ul class="checklist">
+                        <li>Identify attack vectors and source patterns</li>
+                        <li>Implement rate limiting and traffic filtering</li>
+                        <li>Coordinate with ISP and CDN providers</li>
+                        <li>Monitor service availability and performance</li>
+                    </ul>
+                </div>
+
+                <div class="playbook-steps">
+                    <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+# DDoS Attack Response Commands
+
+# 1. Traffic Analysis
+netstat -ntu | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -n
+# Count connections by IP address
+
+# 2. Identify Attack Patterns
+tcpdump -i eth0 -n | head -100
+# Capture network traffic for analysis
+
+# 3. Block Attacking IPs (iptables)
+iptables -A INPUT -s 192.168.1.100 -j DROP
+# Block specific attacking IP
+
+# Block subnet range
+iptables -A INPUT -s 192.168.1.0/24 -j DROP
+
+# 4. Rate Limiting (iptables)
+iptables -A INPUT -p tcp --dport 80 -m limit --limit 25/minute --limit-burst 100 -j ACCEPT
+iptables -A INPUT -p tcp --dport 80 -j DROP
+
+# 5. Monitor Server Load
+top -b -n1 | head -5
+iostat -x 1 5
+# Monitor CPU and I/O usage
+
+# 6. Check Network Interface Statistics
+ifconfig eth0
+# Look for dropped packets and errors
+
+# 7. Apache/Nginx Rate Limiting
+# Apache mod_limit_req
+LoadModule limit_req_module modules/mod_limit_req.so
+<Directory "/var/www/html">
+    LimitRequestRate 10 burst=20
+</Directory>
+
+# 8. Cloudflare API (if using Cloudflare)
+curl -X POST "https://api.cloudflare.com/client/v4/zones/ZONE_ID/firewall/rules" \
+  -H "Authorization: Bearer YOUR_API_TOKEN" \
+  -H "Content-Type: application/json" \
+  --data '{"action":"challenge","filters":[{"expression":"ip.src in {192.168.1.0/24}"}]}'
+                </div>
+
+                <div class="severity-medium">
+                    <h4>🛡️ DDoS Mitigation Strategies</h4>
+                    <ul>
+                        <li><strong>Cloud-based Protection:</strong> Cloudflare, AWS Shield, Azure DDoS Protection</li>
+                        <li><strong>Rate Limiting:</strong> Implement per-IP connection limits</li>
+                        <li><strong>Geoblocking:</strong> Block traffic from suspicious countries</li>
+                        <li><strong>Anycast Networks:</strong> Distribute traffic across multiple locations</li>
+                        <li><strong>CDN Implementation:</strong> Cache static content to reduce origin load</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="data-breach" class="tab-content">
+                <h3>💾 Data Breach Response</h3>
+                
+                <div class="severity-high">
+                    <h4>Critical First Steps</h4>
+                    <ul class="checklist">
+                        <li>Contain the breach and prevent further data loss</li>
+                        <li>Preserve evidence for forensic investigation</li>
+                        <li>Assess the scope and type of compromised data</li>
+                        <li>Notify legal team and prepare for compliance requirements</li>
+                    </ul>
+                </div>
+
+                <div class="playbook-steps">
+                    <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+# Data Breach Response Commands
+
+# 1. Identify Data Access Patterns
+# Database access logs analysis
+grep "SELECT.*FROM.*users\|customers\|employees" /var/log/mysql/mysql.log | tail -100
+
+# 2. File Access Monitoring (Linux)
+# Check for recent file access
+find /sensitive/data/ -type f -atime -1 -ls
+# Files accessed in last 24 hours
+
+# 3. User Activity Analysis
+last -f /var/log/wtmp | head -20
+# Recent user logins
+
+# 4. Network Traffic Analysis
+# Check for data exfiltration
+netstat -nap | grep :443 | wc -l
+# Count HTTPS connections (potential data upload)
+
+# 5. Database Integrity Check
+# MySQL
+mysqlcheck --all-databases --check-only-changed
+
+# PostgreSQL
+psql -c "SELECT * FROM pg_stat_user_tables WHERE n_tup_ins > 1000 OR n_tup_del > 1000;"
+
+# 6. File Integrity Monitoring
+# Compare against known good checksums
+find /sensitive/data/ -type f -exec sha256sum {} \; > current_checksums.txt
+diff baseline_checksums.txt current_checksums.txt
+
+# 7. Memory Dump Analysis (if system is compromised)
+# Create memory dump for analysis
+dd if=/proc/kcore of=/tmp/memory.dump bs=1M count=1000
+
+# 8. Incident Documentation
+echo "$(date): Data breach detected - $(whoami) investigating" >> /var/log/security/incident.log
+
+# 9. Secure Evidence Collection
+# Create forensic image
+dd if=/dev/sda of=/external/forensic_image.dd bs=512 conv=noerror,sync
+                </div>
+
+                <div class="severity-medium">
+                    <h4>📋 Breach Notification Requirements</h4>
+                    <div class="contact-card">
+                        <strong>GDPR (EU):</strong> 72 hours to notify supervisory authority, without undue delay to affected individuals
+                    </div>
+                    <div class="contact-card">
+                        <strong>CCPA (California):</strong> Without unreasonable delay, no later than 72 hours
+                    </div>
+                    <div class="contact-card">
+                        <strong>HIPAA (Healthcare):</strong> 60 days to notify affected individuals, 60 days to HHS
+                    </div>
+                    <div class="contact-card">
+                        <strong>SOX (Financial):</strong> Immediate notification to SEC for material breaches
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="incident-card">
+            <h2 class="section-title">
+                <span class="section-icon">📞</span>
+                Incident Response Team and Communication
+            </h2>
+
+            <div class="incident-types">
+                <div class="incident-type">
+                    <h4>🎯 Incident Commander</h4>
+                    <p><strong>Role:</strong> Overall incident management and decision making</p>
+                    <p><strong>Responsibilities:</strong></p>
+                    <ul>
+                        <li>Coordinate response activities</li>
+                        <li>Make critical decisions</li>
+                        <li>Communicate with stakeholders</li>
+                        <li>Ensure proper documentation</li>
+                    </ul>
+                </div>
+
+                <div class="incident-type">
+                    <h4>🔍 Lead Investigator</h4>
+                    <p><strong>Role:</strong> Technical analysis and forensics</p>
+                    <p><strong>Responsibilities:</strong></p>
+                    <ul>
+                        <li>Conduct technical analysis</li>
+                        <li>Collect and preserve evidence</li>
+                        <li>Determine attack vectors</li>
+                        <li>Provide technical recommendations</li>
+                    </ul>
+                </div>
+
+                <div class="incident-type">
+                    <h4>📢 Communications Lead</h4>
+                    <p><strong>Role:</strong> Internal and external communications</p>
+                    <p><strong>Responsibilities:</strong></p>
+                    <ul>
+                        <li>Coordinate with PR team</li>
+                        <li>Manage media relations</li>
+                        <li>Handle regulatory notifications</li>
+                        <li>Update stakeholders</li>
+                    </ul>
+                </div>
+
+                <div class="incident-type">
+                    <h4>⚖️ Legal Counsel</h4>
+                    <p><strong>Role:</strong> Legal and compliance guidance</p>
+                    <p><strong>Responsibilities:</strong></p>
+                    <ul>
+                        <li>Assess legal implications</li>
+                        <li>Advise on disclosure requirements</li>
+                        <li>Coordinate with law enforcement</li>
+                        <li>Manage litigation holds</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="playbook-steps">
+                <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+# Emergency Contact Script Template
+
+# Incident Response Team Contacts
+INCIDENT_COMMANDER="John Smith - +1-555-0101 - jsmith@company.com"
+LEAD_INVESTIGATOR="Jane Doe - +1-555-0102 - jdoe@company.com"  
+COMMUNICATIONS_LEAD="Bob Johnson - +1-555-0103 - bjohnson@company.com"
+LEGAL_COUNSEL="Sarah Wilson - +1-555-0104 - swilson@company.com"
+
+# External Contacts
+FBI_CYBER="Internet Crime Complaint Center - https://ic3.gov"
+SECRET_SERVICE="U.S. Secret Service Cyber Division - +1-202-406-5850"
+LOCAL_FBI="Local FBI Field Office - +1-555-FBI-TIPS"
+
+# Vendor Contacts
+SECURITY_VENDOR="SecureIT Solutions - +1-555-SECURE"
+FORENSICS_VENDOR="Digital Forensics Inc - +1-555-FORENSIC"
+LEGAL_FIRM="CyberLaw Partners - +1-555-CYBERLAW"
+
+# Automated Notification Script
+function notify_team() {
+    INCIDENT_ID=$1
+    SEVERITY=$2
+    DESCRIPTION=$3
+    
+    # Send notifications via multiple channels
+    echo "INCIDENT ALERT: $INCIDENT_ID - Severity: $SEVERITY - $DESCRIPTION" | \
+    mail -s "Security Incident $INCIDENT_ID" security-team@company.com
+    
+    # Slack notification
+    curl -X POST -H 'Content-type: application/json' \
+    --data "{\"text\":\"🚨 Security Incident $INCIDENT_ID - Severity: $SEVERITY\\n$DESCRIPTION\"}" \
+    $SLACK_WEBHOOK_URL
+    
+    # SMS notification for critical incidents
+    if [ "$SEVERITY" = "CRITICAL" ]; then
+        curl -X POST "https://api.twilio.com/2010-04-01/Accounts/$TWILIO_SID/Messages.json" \
+        --data-urlencode "From=$TWILIO_FROM" \
+        --data-urlencode "To=$ONCALL_PHONE" \
+        --data-urlencode "Body=Critical Security Incident: $INCIDENT_ID" \
+        -u $TWILIO_SID:$TWILIO_TOKEN
+    fi
+}
+
+# Usage: notify_team "INC-2024-001" "CRITICAL" "Ransomware detected on file servers"
+            </div>
+        </div>
+
+        <div class="incident-card">
+            <h2 class="section-title">
+                <span class="section-icon">📊</span>
+                Post-Incident Analysis and Reporting
+            </h2>
+
+            <div class="severity-low">
+                <h4>📈 Key Metrics to Track</h4>
+                <ul class="checklist">
+                    <li>Mean Time to Detection (MTTD)</li>
+                    <li>Mean Time to Containment (MTTC)</li>
+                    <li>Mean Time to Recovery (MTTR)</li>
+                    <li>Number of affected systems/users</li>
+                    <li>Financial impact and recovery costs</li>
+                    <li>Lessons learned and process improvements</li>
+                </ul>
+            </div>
+
+            <div class="playbook-steps">
+                <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+# Post-Incident Analysis Script
+
+#!/bin/bash
+# Incident Analysis Report Generator
+
+INCIDENT_ID=$1
+START_TIME=$2
+END_TIME=$3
+
+echo "=== INCIDENT ANALYSIS REPORT ==="
+echo "Incident ID: $INCIDENT_ID"
+echo "Analysis Date: $(date)"
+echo "Analyst: $(whoami)"
+echo ""
+
+# Calculate Response Times
+echo "=== RESPONSE METRICS ==="
+DETECTION_TIME=$(date -d "$START_TIME" +%s)
+CONTAINMENT_TIME=$(date -d "$END_TIME" +%s)
+TOTAL_DURATION=$((($CONTAINMENT_TIME - $DETECTION_TIME) / 60))
+echo "Total Incident Duration: $TOTAL_DURATION minutes"
+
+# System Impact Assessment
+echo ""
+echo "=== AFFECTED SYSTEMS ==="
+# Query SIEM for affected hosts
+curl -X GET "https://siem.company.com/api/hosts?incident_id=$INCIDENT_ID" \
+  -H "Authorization: Bearer $SIEM_TOKEN" | jq '.affected_hosts[]'
+
+# Evidence Collection Summary
+echo ""
+echo "=== EVIDENCE COLLECTED ==="
+ls -la /evidence/$INCIDENT_ID/
+
+# IOC Summary
+echo ""
+echo "=== INDICATORS OF COMPROMISE ==="
+echo "File Hashes:"
+cat /evidence/$INCIDENT_ID/file_hashes.txt
+
+echo "IP Addresses:"
+cat /evidence/$INCIDENT_ID/suspicious_ips.txt
+
+echo "Domain Names:"
+cat /evidence/$INCIDENT_ID/malicious_domains.txt
+
+# Recommendations
+echo ""
+echo "=== RECOMMENDATIONS ==="
+echo "1. Update incident response procedures based on lessons learned"
+echo "2. Implement additional monitoring for similar attack vectors"
+echo "3. Conduct additional staff training on identified gaps"
+echo "4. Update security controls based on root cause analysis"
+
+# Generate executive summary
+python3 generate_executive_summary.py --incident $INCIDENT_ID --output /reports/
+            </div>
+
+            <div class="severity-medium">
+                <h4>📝 Lessons Learned Template</h4>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                    <h5>What Went Well:</h5>
+                    <ul>
+                        <li>Quick detection and alerting (MTTD: 15 minutes)</li>
+                        <li>Effective team coordination and communication</li>
+                        <li>Successful containment within SLA requirements</li>
+                    </ul>
+                    
+                    <h5>Areas for Improvement:</h5>
+                    <ul>
+                        <li>Automated response could have been faster</li>
+                        <li>Better documentation during live incident</li>
+                        <li>Enhanced monitoring for similar attack patterns</li>
+                    </ul>
+                    
+                    <h5>Action Items:</h5>
+                    <ul>
+                        <li>Update playbook with new procedures (Due: 30 days)</li>
+                        <li>Implement additional SIEM rules (Due: 14 days)</li>
+                        <li>Conduct tabletop exercise (Due: 60 days)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="incident-card">
+            <h2 class="section-title">
+                <span class="section-icon">✅</span>
+                Incident Response Best Practices
+            </h2>
+
+            <div class="severity-low">
+                <h4>🎯 Interview-Ready Best Practices</h4>
+                <ul class="checklist">
+                    <li>Maintain updated incident response plan and playbooks</li>
+                    <li>Conduct regular tabletop exercises and simulations</li>
+                    <li>Establish clear roles, responsibilities, and escalation paths</li>
+                    <li>Implement comprehensive logging and monitoring</li>
+                    <li>Maintain relationships with law enforcement and external partners</li>
+                    <li>Document all actions taken during incident response</li>
+                    <li>Preserve evidence using forensically sound methods</li>
+                    <li>Communicate effectively with internal and external stakeholders</li>
+                    <li>Conduct thorough post-incident analysis and lessons learned</li>
+                    <li>Continuously improve processes based on incidents and exercises</li>
+                </ul>
+            </div>
+
+            <div class="severity-high">
+                <h4>🎤 Interview Talking Points</h4>
+                <ul>
+                    <li><strong>Experience:</strong> "I've led incident response for a ransomware attack that affected 200+ systems, containing it within 4 hours and preventing data exfiltration."</li>
+                    <li><strong>Process Knowledge:</strong> "I follow NIST framework with clear phases: Preparation, Detection & Analysis, Containment/Eradication/Recovery, and Post-incident activities."</li>
+                    <li><strong>Tools & Skills:</strong> "I'm proficient with SIEM tools, digital forensics tools like Volatility and Autopsy, and incident management platforms like TheHive."</li>
+                    <li><strong>Communication:</strong> "I've managed communication with C-level executives, regulatory bodies, and law enforcement during major security incidents."</li>
+                    <li><strong>Metrics Focus:</strong> "I track MTTD, MTTC, and MTTR metrics to continuously improve our incident response capabilities and demonstrate value to management."</li>
+                </ul>
+            </div>
+
+            <div class="contact-card">
+                <h4>🏆 Certifications for Incident Response</h4>
+                <ul>
+                    <li><strong>GCIH:</strong> GIAC Certified Incident Handler</li>
+                    <li><strong>GCFA:</strong> GIAC Certified Forensic Analyst</li>
+                    <li><strong>GNFA:</strong> GIAC Network Forensic Analyst</li>
+                    <li><strong>CISSP:</strong> Certified Information Systems Security Professional</li>
+                    <li><strong>CISM:</strong> Certified Information Security Manager</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        function copyToClipboard(button) {
+            const codeBlock = button.parentElement;
+            const text = codeBlock.textContent.replace('Copy', '').trim();
+            navigator.clipboard.writeText(text).then(function() {
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

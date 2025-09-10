@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux System Hardening - Complete Security Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding-top: 80px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Navigation Styles */
+        .navbar {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-logo {
+            color: white;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 30px;
+        }
+
+        .nav-item a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-item a:hover {
+            opacity: 0.8;
+        }
+
+        .back-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .hardening-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUp 0.8s ease-out forwards;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hardening-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .hardening-card:nth-child(2) { animation-delay: 0.1s; }
+        .hardening-card:nth-child(3) { animation-delay: 0.2s; }
+        .hardening-card:nth-child(4) { animation-delay: 0.3s; }
+
+        .section-title {
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-icon {
+            font-size: 1.2em;
+            margin-right: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .command-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .command-block::before {
+            content: "Terminal";
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .command {
+            color: #68d391;
+            font-weight: bold;
+        }
+
+        .command-description {
+            background: linear-gradient(45deg, #e3f2fd 0%, #f3e5f5 100%);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .security-tip {
+            background: linear-gradient(45deg, #fff3cd 0%, #ffeaa7 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #f39c12;
+        }
+
+        .security-tip h4 {
+            color: #e17055;
+            margin-bottom: 10px;
+        }
+
+        .vulnerability-alert {
+            background: linear-gradient(45deg, #f8d7da 0%, #f5c6cb 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #dc3545;
+        }
+
+        .vulnerability-alert h4 {
+            color: #721c24;
+            margin-bottom: 10px;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            background: #f8f9fa;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+            transition: background 0.3s ease;
+        }
+
+        .checklist li:hover {
+            background: #e9ecef;
+        }
+
+        .checklist li::before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+        }
+
+        .tab {
+            background: none;
+            border: none;
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 0 0 10px 10px;
+            border: 1px solid #e9ecef;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .copy-button:hover {
+            background: #5a67d8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">🛡️ SOC Analyst Hub</a>
+            
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html">Overview</a></li>
+                <li class="nav-item"><a href="linux-hardening.html">Linux Hardening</a></li>
+                <li class="nav-item"><a href="windows-hardening.html">Windows Hardening</a></li>
+                <li class="nav-item"><a href="jira-integration.html">Jira Integration</a></li>
+                <li class="nav-item"><a href="vulnerability-management.html">Vulnerability Mgmt</a></li>
+                <li class="nav-item"><a href="incident-response.html">Incident Response</a></li>
+            </ul>
+
+            <a href="index.html" class="back-button">← Back to Overview</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="header">
+            <h1>🐧 Linux System Hardening</h1>
+            <p>Comprehensive Guide to Securing Linux Systems Against Known Vulnerabilities</p>
+        </header>
+
+        <div class="hardening-card">
+            <h2 class="section-title">
+                <span class="section-icon">🔐</span>
+                System Updates and Package Management
+            </h2>
+            
+            <div class="security-tip">
+                <h4>🚨 Critical Priority</h4>
+                <p>Keep your system updated! 90% of successful attacks exploit known vulnerabilities that have available patches.</p>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab(event, 'ubuntu-updates')">Ubuntu/Debian</button>
+                <button class="tab" onclick="switchTab(event, 'rhel-updates')">RHEL/CentOS</button>
+                <button class="tab" onclick="switchTab(event, 'arch-updates')">Arch Linux</button>
+            </div>
+
+            <div id="ubuntu-updates" class="tab-content active">
+                <div class="command-block">
+                    <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+<span class="command"># Update package lists</span>
+sudo apt update
+
+<span class="command"># Upgrade all packages</span>
+sudo apt upgrade -y
+
+<span class="command"># Remove unused packages</span>
+sudo apt autoremove -y
+
+<span class="command"># Check for security updates</span>
+sudo unattended-upgrade --dry-run
+
+<span class="command"># Enable automatic security updates</span>
+sudo dpkg-reconfigure -plow unattended-upgrades
+                </div>
+                <div class="command-description">
+                    <strong>What this does:</strong> Updates your system with the latest security patches and removes unnecessary packages that could be potential attack vectors.
+                </div>
+            </div>
+
+            <div id="rhel-updates" class="tab-content">
+                <div class="command-block">
+                    <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+<span class="command"># Update all packages (RHEL/CentOS 8+)</span>
+sudo dnf update -y
+
+<span class="command"># For older versions (CentOS 7)</span>
+sudo yum update -y
+
+<span class="command"># Check for security updates only</span>
+sudo dnf updateinfo list security
+
+<span class="command"># Install security updates only</span>
+sudo dnf update --security -y
+                </div>
+                <div class="command-description">
+                    <strong>What this does:</strong> Updates Red Hat based systems with security patches and provides options for security-only updates.
+                </div>
+            </div>
+
+            <div id="arch-updates" class="tab-content">
+                <div class="command-block">
+                    <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+<span class="command"># Update system</span>
+sudo pacman -Syu
+
+<span class="command"># Check for orphaned packages</span>
+pacman -Qdt
+
+<span class="command"># Remove orphaned packages</span>
+sudo pacman -Rs $(pacman -Qtdq)
+                </div>
+                <div class="command-description">
+                    <strong>What this does:</strong> Updates Arch Linux system and removes orphaned packages that are no longer needed.
+                </div>
+            </div>
+        </div>
+
+        <div class="hardening-card">
+            <h2 class="section-title">
+                <span class="section-icon">👤</span>
+                User Account Security
+            </h2>
+
+            <div class="vulnerability-alert">
+                <h4>⚠️ Common Vulnerability: Weak User Management</h4>
+                <p>Default accounts, weak passwords, and excessive privileges are common attack vectors. Always follow the principle of least privilege.</p>
+            </div>
+
+            <div class="command-block">
+                <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+<span class="command"># Create a new user with limited privileges</span>
+sudo useradd -m -s /bin/bash -G sudo username
+
+<span class="command"># Set strong password policy</span>
+sudo passwd username
+
+<span class="command"># Lock unused accounts</span>
+sudo usermod -L nobody
+sudo usermod -L games
+
+<span class="command"># Check for accounts with empty passwords</span>
+sudo awk -F: '($2 == "") {print}' /etc/shadow
+
+<span class="command"># Remove unnecessary users</span>
+sudo userdel -r olduser
+
+<span class="command"># Set password aging policy</span>
+sudo chage -M 90 -m 7 -W 7 username
+
+<span class="command"># View current password policies</span>
+sudo chage -l username
+            </div>
+
+            <div class="security-tip">
+                <h4>💡 Best Practices for User Management</h4>
+                <ul>
+                    <li>Use strong passwords (minimum 12 characters)</li>
+                    <li>Enable two-factor authentication when possible</li>
+                    <li>Regularly audit user accounts and remove unused ones</li>
+                    <li>Implement password rotation policies</li>
+                    <li>Use sudo instead of root login</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="hardening-card">
+            <h2 class="section-title">
+                <span class="section-icon">🔥</span>
+                Firewall Configuration (UFW & iptables)
+            </h2>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab(event, 'ufw-config')">UFW (Simple)</button>
+                <button class="tab" onclick="switchTab(event, 'iptables-config')">iptables (Advanced)</button>
+            </div>
+
+            <div id="ufw-config" class="tab-content active">
+                <div class="command-block">
+                    <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+<span class="command"># Enable UFW firewall</span>
+sudo ufw enable
+
+<span class="command"># Set default policies</span>
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+
+<span class="command"># Allow SSH (change port if needed)</span>
+sudo ufw allow 22/tcp
+
+<span class="command"># Allow HTTP and HTTPS</span>
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+
+<span class="command"># Allow specific IP for SSH</span>
+sudo ufw allow from 192.168.1.100 to any port 22
+
+<span class="command"># View firewall status</span>
+sudo ufw status verbose
+
+<span class="command"># View numbered rules</span>
+sudo ufw status numbered
+
+<span class="command"># Delete a rule</span>
+sudo ufw delete 2
+                </div>
+                <div class="command-description">
+                    <strong>What this does:</strong> Configures a basic firewall using UFW (Uncomplicated Firewall) to block unnecessary incoming connections while allowing essential services.
+                </div>
+            </div>
+
+            <div id="iptables-config" class="tab-content">
+                <div class="command-block">
+                    <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+<span class="command"># Flush existing rules</span>
+sudo iptables -F
+sudo iptables -X
+sudo iptables -t nat -F
+sudo iptables -t nat -X
+
+<span class="command"># Set default policies</span>
+sudo iptables -P INPUT DROP
+sudo iptables -P FORWARD DROP
+sudo iptables -P OUTPUT ACCEPT
+
+<span class="command"># Allow loopback</span>
+sudo iptables -I INPUT 1 -i lo -j ACCEPT
+
+<span class="command"># Allow established connections</span>
+sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+<span class="command"># Allow SSH</span>
+sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+
+<span class="command"># Block common attack patterns</span>
+sudo iptables -A INPUT -p tcp --tcp-flags ALL NONE -j DROP
+sudo iptables -A INPUT -p tcp --tcp-flags ALL ALL -j DROP
+
+<span class="command"># Save rules (Ubuntu/Debian)</span>
+sudo iptables-save > /etc/iptables/rules.v4
+                </div>
+                <div class="command-description">
+                    <strong>What this does:</strong> Advanced firewall configuration using iptables for more granular control over network traffic and blocking common attack patterns.
+                </div>
+            </div>
+        </div>
+
+        <div class="hardening-card">
+            <h2 class="section-title">
+                <span class="section-icon">🔑</span>
+                SSH Hardening
+            </h2>
+
+            <div class="vulnerability-alert">
+                <h4>⚠️ SSH Vulnerabilities</h4>
+                <p>SSH is often targeted by attackers. Default configurations are often insecure. Proper SSH hardening can prevent 80% of brute force attacks.</p>
+            </div>
+
+            <div class="command-block">
+                <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+<span class="command"># Backup original SSH config</span>
+sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.backup
+
+<span class="command"># Edit SSH configuration</span>
+sudo nano /etc/ssh/sshd_config
+
+<span class="command"># Key configurations to add/modify:</span>
+# Change default port
+Port 2222
+
+# Disable root login
+PermitRootLogin no
+
+# Disable password authentication (use keys only)
+PasswordAuthentication no
+PubkeyAuthentication yes
+
+# Limit user access
+AllowUsers yourusername
+
+# Set login grace time
+LoginGraceTime 60
+
+# Limit max auth tries
+MaxAuthTries 3
+
+# Disable empty passwords
+PermitEmptyPasswords no
+
+# Disable X11 forwarding if not needed
+X11Forwarding no
+
+<span class="command"># Generate SSH key pair (client side)</span>
+ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+
+<span class="command"># Copy public key to server</span>
+ssh-copy-id -p 2222 username@server_ip
+
+<span class="command"># Restart SSH service</span>
+sudo systemctl restart sshd
+
+<span class="command"># Check SSH service status</span>
+sudo systemctl status sshd
+            </div>
+
+            <div class="security-tip">
+                <h4>💡 SSH Security Checklist</h4>
+                <ul class="checklist">
+                    <li>Change default SSH port from 22</li>
+                    <li>Disable root login completely</li>
+                    <li>Use SSH keys instead of passwords</li>
+                    <li>Implement fail2ban for brute force protection</li>
+                    <li>Use strong ciphers and disable weak ones</li>
+                    <li>Regularly monitor SSH logs</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="hardening-card">
+            <h2 class="section-title">
+                <span class="section-icon">📁</span>
+                File System Security
+            </h2>
+
+            <div class="command-block">
+                <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+<span class="command"># Find files with SUID bit set</span>
+find / -type f -perm -4000 2>/dev/null
+
+<span class="command"># Find world-writable files</span>
+find / -type f -perm -002 2>/dev/null
+
+<span class="command"># Find files without owner</span>
+find / -nouser -o -nogroup 2>/dev/null
+
+<span class="command"># Secure important directories</span>
+sudo chmod 700 /root
+sudo chmod 700 /home/*
+sudo chmod 644 /etc/passwd
+sudo chmod 600 /etc/shadow
+
+<span class="command"># Set up file integrity monitoring</span>
+sudo apt install aide
+sudo aideinit
+sudo cp /var/lib/aide/aide.db.new /var/lib/aide/aide.db
+
+<span class="command"># Check file integrity</span>
+sudo aide --check
+
+<span class="command"># Enable filesystem monitoring with auditd</span>
+sudo apt install auditd
+sudo auditctl -w /etc/passwd -p wa -k passwd_changes
+sudo auditctl -w /etc/shadow -p wa -k shadow_changes
+sudo auditctl -w /etc/group -p wa -k group_changes
+            </div>
+
+            <div class="security-tip">
+                <h4>💡 File System Hardening Tips</h4>
+                <ul>
+                    <li>Regularly scan for SUID/SGID files</li>
+                    <li>Monitor critical system files for changes</li>
+                    <li>Use proper file permissions (principle of least privilege)</li>
+                    <li>Enable file system encryption for sensitive data</li>
+                    <li>Implement access controls with SELinux/AppArmor</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="hardening-card">
+            <h2 class="section-title">
+                <span class="section-icon">🛡️</span>
+                Network Security
+            </h2>
+
+            <div class="command-block">
+                <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+<span class="command"># Disable IP forwarding</span>
+echo 'net.ipv4.ip_forward = 0' | sudo tee -a /etc/sysctl.conf
+
+<span class="command"># Disable ICMP redirects</span>
+echo 'net.ipv4.conf.all.accept_redirects = 0' | sudo tee -a /etc/sysctl.conf
+echo 'net.ipv6.conf.all.accept_redirects = 0' | sudo tee -a /etc/sysctl.conf
+
+<span class="command"># Enable SYN flood protection</span>
+echo 'net.ipv4.tcp_syncookies = 1' | sudo tee -a /etc/sysctl.conf
+
+<span class="command"># Ignore ping requests</span>
+echo 'net.ipv4.icmp_echo_ignore_all = 1' | sudo tee -a /etc/sysctl.conf
+
+<span class="command"># Apply sysctl changes</span>
+sudo sysctl -p
+
+<span class="command"># Install and configure fail2ban</span>
+sudo apt install fail2ban
+
+<span class="command"># Create fail2ban local config</span>
+sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+
+<span class="command"># Edit fail2ban configuration</span>
+sudo nano /etc/fail2ban/jail.local
+
+<span class="command"># Start fail2ban service</span>
+sudo systemctl enable fail2ban
+sudo systemctl start fail2ban
+
+<span class="command"># Check fail2ban status</span>
+sudo fail2ban-client status
+sudo fail2ban-client status sshd
+            </div>
+
+            <div class="vulnerability-alert">
+                <h4>⚠️ Network Attack Vectors</h4>
+                <p>Common network attacks include DDoS, man-in-the-middle, and port scanning. Proper network hardening can mitigate these risks significantly.</p>
+            </div>
+        </div>
+
+        <div class="hardening-card">
+            <h2 class="section-title">
+                <span class="section-icon">📋</span>
+                Security Monitoring and Logging
+            </h2>
+
+            <div class="command-block">
+                <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+<span class="command"># Install rsyslog for centralized logging</span>
+sudo apt install rsyslog
+
+<span class="command"># Configure log rotation</span>
+sudo nano /etc/logrotate.conf
+
+<span class="command"># Monitor authentication logs</span>
+tail -f /var/log/auth.log
+
+<span class="command"># Check for failed login attempts</span>
+grep "Failed password" /var/log/auth.log
+
+<span class="command"># Monitor system logs</span>
+journalctl -f
+
+<span class="command"># Install and configure OSSEC (Host-based IDS)</span>
+wget https://github.com/ossec/ossec-hids/archive/3.6.0.tar.gz
+tar -zxf 3.6.0.tar.gz
+cd ossec-hids-3.6.0
+sudo ./install.sh
+
+<span class="command"># Set up log monitoring with logwatch</span>
+sudo apt install logwatch
+sudo logwatch --output stdout --format text --range yesterday
+
+<span class="command"># Create custom security monitoring script</span>
+sudo nano /usr/local/bin/security_check.sh
+            </div>
+
+            <div class="security-tip">
+                <h4>💡 Monitoring Best Practices</h4>
+                <ul class="checklist">
+                    <li>Enable comprehensive logging on all systems</li>
+                    <li>Set up centralized log collection</li>
+                    <li>Monitor authentication events</li>
+                    <li>Alert on suspicious activities</li>
+                    <li>Regularly review log files</li>
+                    <li>Implement log retention policies</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="hardening-card">
+            <h2 class="section-title">
+                <span class="section-icon">✅</span>
+                Final Security Checklist
+            </h2>
+
+            <div class="security-tip">
+                <h4>🎯 Complete Hardening Checklist</h4>
+                <ul class="checklist">
+                    <li>System is fully updated with latest security patches</li>
+                    <li>Unnecessary services and packages are removed</li>
+                    <li>Strong user account policies are implemented</li>
+                    <li>SSH is properly hardened with key-based authentication</li>
+                    <li>Firewall is configured with minimal required access</li>
+                    <li>File system permissions are properly set</li>
+                    <li>Network security parameters are configured</li>
+                    <li>Intrusion detection system is installed and configured</li>
+                    <li>Comprehensive logging and monitoring is enabled</li>
+                    <li>Regular security audits are scheduled</li>
+                </ul>
+            </div>
+
+            <div class="vulnerability-alert">
+                <h4>🔄 Ongoing Security Maintenance</h4>
+                <p>Security is not a one-time task! Regularly review and update your security configurations, monitor logs, and stay informed about new vulnerabilities.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        function copyToClipboard(button) {
+            const codeBlock = button.parentElement;
+            const text = codeBlock.textContent.replace('Copy', '').trim();
+            navigator.clipboard.writeText(text).then(function() {
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

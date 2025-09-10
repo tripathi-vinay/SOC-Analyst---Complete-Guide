@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jira for Cybersecurity - Complete Integration Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding-top: 80px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Navigation Styles */
+        .navbar {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-logo {
+            color: white;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 30px;
+        }
+
+        .nav-item a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-item a:hover {
+            opacity: 0.8;
+        }
+
+        .back-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .jira-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUp 0.8s ease-out forwards;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .jira-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .jira-card:nth-child(2) { animation-delay: 0.1s; }
+        .jira-card:nth-child(3) { animation-delay: 0.2s; }
+        .jira-card:nth-child(4) { animation-delay: 0.3s; }
+
+        .section-title {
+            font-size: 2em;
+            color: #0052cc;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #0052cc;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-icon {
+            font-size: 1.2em;
+            margin-right: 15px;
+            background: linear-gradient(45deg, #0052cc, #2684ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .jira-workflow {
+            background: #f4f5f7;
+            border: 2px solid #dfe1e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #0052cc;
+        }
+
+        .step-number {
+            background: #0052cc;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+
+        .jira-example {
+            background: linear-gradient(45deg, #e3f2fd 0%, #f3e5f5 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #0052cc;
+        }
+
+        .jira-ticket {
+            background: #fff;
+            border: 1px solid #dfe1e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .ticket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .ticket-id {
+            background: #0052cc;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .priority-high {
+            background: #de350b;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .priority-medium {
+            background: #ff8b00;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .priority-low {
+            background: #00875a;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+
+        .security-tip {
+            background: linear-gradient(45deg, #fff3cd 0%, #ffeaa7 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #f39c12;
+        }
+
+        .security-tip h4 {
+            color: #e17055;
+            margin-bottom: 10px;
+        }
+
+        .integration-box {
+            background: linear-gradient(45deg, #d4edda 0%, #c3e6cb 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #28a745;
+        }
+
+        .integration-box h4 {
+            color: #155724;
+            margin-bottom: 10px;
+        }
+
+        .api-code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .api-code::before {
+            content: "REST API";
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #0052cc;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            background: #f8f9fa;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+            transition: background 0.3s ease;
+        }
+
+        .checklist li:hover {
+            background: #e9ecef;
+        }
+
+        .checklist li::before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+        }
+
+        .tab {
+            background: none;
+            border: none;
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: #0052cc;
+            color: white;
+        }
+
+        .tab:hover {
+            background: rgba(0, 82, 204, 0.1);
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 0 0 10px 10px;
+            border: 1px solid #e9ecef;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #0052cc;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .copy-button:hover {
+            background: #0065ff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">🛡️ SOC Analyst Hub</a>
+            
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html">Overview</a></li>
+                <li class="nav-item"><a href="linux-hardening.html">Linux Hardening</a></li>
+                <li class="nav-item"><a href="windows-hardening.html">Windows Hardening</a></li>
+                <li class="nav-item"><a href="jira-integration.html">Jira Integration</a></li>
+                <li class="nav-item"><a href="vulnerability-management.html">Vulnerability Mgmt</a></li>
+                <li class="nav-item"><a href="incident-response.html">Incident Response</a></li>
+            </ul>
+
+            <a href="index.html" class="back-button">← Back to Overview</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="header">
+            <h1>🔧 Jira for Cybersecurity</h1>
+            <p>Complete Guide to Using Jira for Security Operations, Incident Management, and Vulnerability Tracking</p>
+        </header>
+
+        <div class="jira-card">
+            <h2 class="section-title">
+                <span class="section-icon">🎯</span>
+                Why Use Jira for Cybersecurity?
+            </h2>
+            
+            <div class="security-tip">
+                <h4>🚀 Jira Benefits for SOC Teams</h4>
+                <p>Jira provides structured workflow management, real-time collaboration, and comprehensive tracking - essential for managing security incidents, vulnerabilities, and compliance tasks efficiently.</p>
+            </div>
+
+            <div class="jira-workflow">
+                <h3>Key Cybersecurity Use Cases:</h3>
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <div>
+                        <strong>Incident Response Management:</strong> Track security incidents from detection to resolution with automated workflows and SLA tracking.
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <div>
+                        <strong>Vulnerability Management:</strong> Prioritize and track vulnerability remediation with risk-based workflows and patch management.
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <div>
+                        <strong>Compliance Tracking:</strong> Manage audit requirements, control implementations, and compliance assessments with structured documentation.
+                    </div>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">4</div>
+                    <div>
+                        <strong>Security Project Management:</strong> Coordinate security initiatives, resource allocation, and timeline management across teams.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="jira-card">
+            <h2 class="section-title">
+                <span class="section-icon">🔧</span>
+                Setting Up Jira for Security Operations
+            </h2>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab(event, 'project-setup')">Project Setup</button>
+                <button class="tab" onclick="switchTab(event, 'custom-fields')">Custom Fields</button>
+                <button class="tab" onclick="switchTab(event, 'workflows')">Workflows</button>
+            </div>
+
+            <div id="project-setup" class="tab-content active">
+                <h3>Creating Security-Focused Projects</h3>
+                
+                <div class="jira-example">
+                    <h4>📋 Recommended Project Structure:</h4>
+                    <ul>
+                        <li><strong>SEC-IR:</strong> Security Incident Response</li>
+                        <li><strong>SEC-VM:</strong> Vulnerability Management</li>
+                        <li><strong>SEC-COM:</strong> Compliance & Audit</li>
+                        <li><strong>SEC-TI:</strong> Threat Intelligence</li>
+                        <li><strong>SEC-PROJ:</strong> Security Projects</li>
+                    </ul>
+                </div>
+
+                <div class="integration-box">
+                    <h4>🎯 Project Configuration Best Practices:</h4>
+                    <ul class="checklist">
+                        <li>Use descriptive project keys (SEC-IR vs IR)</li>
+                        <li>Set appropriate permissions for sensitive data</li>
+                        <li>Configure notification schemes for urgent issues</li>
+                        <li>Enable time tracking for SLA management</li>
+                        <li>Set up project categories for reporting</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="custom-fields" class="tab-content">
+                <h3>Security-Specific Custom Fields</h3>
+                
+                <div class="jira-example">
+                    <h4>🔒 Essential Security Fields:</h4>
+                    <ul>
+                        <li><strong>CVSS Score:</strong> Number field (0-10)</li>
+                        <li><strong>Asset Criticality:</strong> Select list (Critical, High, Medium, Low)</li>
+                        <li><strong>Attack Vector:</strong> Select list (Network, Adjacent, Local, Physical)</li>
+                        <li><strong>Affected Systems:</strong> Multi-select (Web, Database, Email, etc.)</li>
+                        <li><strong>IOCs:</strong> Text area for Indicators of Compromise</li>
+                        <li><strong>Evidence Links:</strong> URL field for forensic evidence</li>
+                        <li><strong>Compliance Framework:</strong> Select list (SOX, PCI-DSS, HIPAA, etc.)</li>
+                        <li><strong>Threat Actor:</strong> Text field for attribution</li>
+                    </ul>
+                </div>
+
+                <div class="api-code">
+                    <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+// Create custom field via REST API
+curl -X POST \
+  'https://yourcompany.atlassian.net/rest/api/3/field' \
+  -H 'Authorization: Basic YOUR_API_TOKEN' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "name": "CVSS Score",
+    "description": "Common Vulnerability Scoring System Score",
+    "type": "com.atlassian.jira.plugin.system.customfieldtypes:float",
+    "searcherKey": "com.atlassian.jira.plugin.system.customfieldtypes:numberrange"
+  }'
+                </div>
+            </div>
+
+            <div id="workflows" class="tab-content">
+                <h3>Security Incident Workflow</h3>
+                
+                <div class="jira-workflow">
+                    <h4>Incident Response Workflow Stages:</h4>
+                    <div class="workflow-step">
+                        <div class="step-number">1</div>
+                        <div><strong>New:</strong> Incident reported, initial triage needed</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">2</div>
+                        <div><strong>Triaging:</strong> Analyst reviewing severity and impact</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">3</div>
+                        <div><strong>Investigating:</strong> Active investigation in progress</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">4</div>
+                        <div><strong>Containing:</strong> Threat contained, preventing spread</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">5</div>
+                        <div><strong>Eradicating:</strong> Removing threat from environment</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">6</div>
+                        <div><strong>Recovering:</strong> Restoring services and monitoring</div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">7</div>
+                        <div><strong>Closed:</strong> Incident resolved, lessons learned documented</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="jira-card">
+            <h2 class="section-title">
+                <span class="section-icon">🎫</span>
+                Security Incident Ticket Examples
+            </h2>
+
+            <div class="jira-ticket">
+                <div class="ticket-header">
+                    <span class="ticket-id">SEC-IR-1001</span>
+                    <span class="priority-high">Critical</span>
+                </div>
+                <h3>Ransomware Attack Detected on File Server</h3>
+                <p><strong>Reporter:</strong> SOC Analyst John Smith</p>
+                <p><strong>Assignee:</strong> Incident Response Team</p>
+                <p><strong>Created:</strong> 2025-09-11 08:30 AM</p>
+                <p><strong>SLA:</strong> 1 hour response time</p>
+                
+                <div style="margin-top: 15px;">
+                    <strong>Description:</strong><br>
+                    Multiple .encrypted files detected on FILESERVER01. Ransom note found in C:\temp\. All user access to file shares has been blocked as precautionary measure.
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <strong>Custom Fields:</strong><br>
+                    • <strong>CVSS Score:</strong> 9.5<br>
+                    • <strong>Asset Criticality:</strong> Critical<br>
+                    • <strong>Affected Systems:</strong> File Server, User Workstations<br>
+                    • <strong>Attack Vector:</strong> Email Phishing<br>
+                    • <strong>IOCs:</strong> malware.exe (SHA256: a1b2c3...), C2 server: 192.168.100.50
+                </div>
+            </div>
+
+            <div class="jira-ticket">
+                <div class="ticket-header">
+                    <span class="ticket-id">SEC-VM-2045</span>
+                    <span class="priority-medium">High</span>
+                </div>
+                <h3>Critical Vulnerability in Apache Log4j (CVE-2021-44228)</h3>
+                <p><strong>Reporter:</strong> Vulnerability Scanner</p>
+                <p><strong>Assignee:</strong> IT Infrastructure Team</p>
+                <p><strong>Created:</strong> 2025-09-11 10:15 AM</p>
+                <p><strong>Due Date:</strong> 2025-09-18 (7 days)</p>
+                
+                <div style="margin-top: 15px;">
+                    <strong>Description:</strong><br>
+                    Log4Shell vulnerability detected on multiple Java applications. Immediate patching required to prevent RCE attacks.
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <strong>Custom Fields:</strong><br>
+                    • <strong>CVSS Score:</strong> 10.0<br>
+                    • <strong>Asset Criticality:</strong> High<br>
+                    • <strong>Affected Systems:</strong> Web Applications, API Gateway<br>
+                    • <strong>Compliance Framework:</strong> PCI-DSS<br>
+                    • <strong>Remediation:</strong> Update to Log4j 2.17.1 or later
+                </div>
+            </div>
+
+            <div class="jira-ticket">
+                <div class="ticket-header">
+                    <span class="ticket-id">SEC-COM-3012</span>
+                    <span class="priority-low">Medium</span>
+                </div>
+                <h3>Quarterly PCI-DSS Compliance Assessment</h3>
+                <p><strong>Reporter:</strong> Compliance Officer</p>
+                <p><strong>Assignee:</strong> Security Team</p>
+                <p><strong>Created:</strong> 2025-09-01 09:00 AM</p>
+                <p><strong>Due Date:</strong> 2025-09-30</p>
+                
+                <div style="margin-top: 15px;">
+                    <strong>Description:</strong><br>
+                    Conduct quarterly PCI-DSS compliance assessment including network segmentation testing, access control review, and vulnerability scanning.
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <strong>Custom Fields:</strong><br>
+                    • <strong>Compliance Framework:</strong> PCI-DSS<br>
+                    • <strong>Assessment Type:</strong> Internal<br>
+                    • <strong>Requirements:</strong> 12.1, 12.2, 12.3, 12.4<br>
+                    • <strong>Evidence Required:</strong> Network diagrams, access logs, scan reports
+                </div>
+            </div>
+        </div>
+
+        <div class="jira-card">
+            <h2 class="section-title">
+                <span class="section-icon">🔗</span>
+                SIEM and Security Tool Integration
+            </h2>
+
+            <div class="integration-box">
+                <h4>🔌 Common Integration Scenarios</h4>
+                <p>Integrate Jira with your security tools to automate ticket creation and updates, ensuring no alerts are missed and response times are minimized.</p>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab(event, 'splunk-integration')">Splunk Integration</button>
+                <button class="tab" onclick="switchTab(event, 'api-automation')">API Automation</button>
+                <button class="tab" onclick="switchTab(event, 'webhook-setup')">Webhook Setup</button>
+            </div>
+
+            <div id="splunk-integration" class="tab-content active">
+                <h3>Splunk to Jira Integration</h3>
+                
+                <div class="api-code">
+                    <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+# Splunk Search to Create Jira Ticket
+index=security sourcetype=firewall action=blocked 
+| stats count by src_ip dest_port 
+| where count > 100 
+| eval jira_summary="Potential Port Scan Detected from " + src_ip
+| eval jira_description="Source IP " + src_ip + " attempted " + count + " connections to port " + dest_port
+| eval jira_priority="High"
+| table jira_summary jira_description jira_priority
+| outputlookup jira_tickets.csv
+                </div>
+
+                <div class="jira-example">
+                    <h4>📊 Splunk Alert Actions:</h4>
+                    <ul>
+                        <li>Create Jira ticket when CVSS > 7.0</li>
+                        <li>Update existing ticket with new IOCs</li>
+                        <li>Auto-assign based on alert category</li>
+                        <li>Set priority based on asset criticality</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="api-automation" class="tab-content">
+                <h3>Python Script for Automated Ticket Creation</h3>
+                
+                <div class="api-code">
+                    <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+import requests
+import json
+from datetime import datetime
+
+def create_security_incident(summary, description, priority, cvss_score):
+    """Create a security incident ticket in Jira"""
+    
+    jira_url = "https://yourcompany.atlassian.net"
+    api_token = "YOUR_API_TOKEN"
+    email = "your.email@company.com"
+    
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Basic {api_token}"
+    }
+    
+    payload = {
+        "fields": {
+            "project": {"key": "SEC-IR"},
+            "summary": summary,
+            "description": description,
+            "issuetype": {"name": "Security Incident"},
+            "priority": {"name": priority},
+            "customfield_10001": cvss_score,  # CVSS Score field
+            "customfield_10002": {"value": "Network"},  # Attack Vector
+            "assignee": {"accountId": "incident-response-team-id"},
+            "labels": ["security", "incident", "automated"]
+        }
+    }
+    
+    response = requests.post(
+        f"{jira_url}/rest/api/3/issue",
+        headers=headers,
+        data=json.dumps(payload)
+    )
+    
+    if response.status_code == 201:
+        ticket = response.json()
+        print(f"Created ticket: {ticket['key']}")
+        return ticket['key']
+    else:
+        print(f"Error creating ticket: {response.text}")
+        return None
+
+# Example usage
+create_security_incident(
+    summary="Malware Detected on Endpoint",
+    description="CrowdStrike detected Trojan.Win32.Agent on DESKTOP-001",
+    priority="High",
+    cvss_score=8.5
+)
+                </div>
+            </div>
+
+            <div id="webhook-setup" class="tab-content">
+                <h3>Webhook Configuration for Real-time Updates</h3>
+                
+                <div class="api-code">
+                    <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+# Configure webhook to notify external systems
+curl -X POST \
+  'https://yourcompany.atlassian.net/rest/webhooks/1.0/webhook' \
+  -H 'Authorization: Basic YOUR_API_TOKEN' \
+  -H 'Content-Type: application/json' \
+  -d '{
+    "name": "Security Incident Webhook",
+    "url": "https://your-siem.company.com/jira-webhook",
+    "events": [
+      "jira:issue_created",
+      "jira:issue_updated"
+    ],
+    "filters": {
+      "issue-related-events-section": "project = \"SEC-IR\""
+    }
+  }'
+                </div>
+
+                <div class="jira-example">
+                    <h4>🔔 Webhook Use Cases:</h4>
+                    <ul>
+                        <li>Notify SIEM when incident status changes</li>
+                        <li>Update security dashboard with real-time metrics</li>
+                        <li>Trigger automated response playbooks</li>
+                        <li>Send alerts to Slack/Teams for critical incidents</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="jira-card">
+            <h2 class="section-title">
+                <span class="section-icon">📊</span>
+                Security Metrics and Reporting
+            </h2>
+
+            <div class="jira-example">
+                <h4>📈 Key Security Metrics to Track:</h4>
+                <ul>
+                    <li><strong>MTTR (Mean Time to Resolve):</strong> Average time from incident creation to resolution</li>
+                    <li><strong>MTTD (Mean Time to Detect):</strong> Time from attack start to detection</li>
+                    <li><strong>Incident Volume:</strong> Number of security incidents by severity and type</li>
+                    <li><strong>Vulnerability Remediation:</strong> Time from discovery to patch implementation</li>
+                    <li><strong>False Positive Rate:</strong> Percentage of alerts that are false positives</li>
+                    <li><strong>Compliance Status:</strong> Percentage of controls implemented and tested</li>
+                </ul>
+            </div>
+
+            <div class="api-code">
+                <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+# JQL Queries for Security Reporting
+
+# Critical incidents this month
+project = "SEC-IR" AND priority = "Critical" AND created >= -30d
+
+# Average resolution time for high severity vulnerabilities
+project = "SEC-VM" AND priority = "High" AND status = "Closed" AND resolved >= -90d
+
+# Open compliance items by framework
+project = "SEC-COM" AND status != "Closed" ORDER BY "Compliance Framework"
+
+# Incidents by attack vector
+project = "SEC-IR" AND "Attack Vector" is not EMPTY GROUP BY "Attack Vector"
+
+# Overdue vulnerability patches
+project = "SEC-VM" AND status != "Closed" AND duedate < now()
+            </div>
+
+            <div class="security-tip">
+                <h4>📊 Dashboard Best Practices</h4>
+                <ul class="checklist">
+                    <li>Create executive dashboards with high-level metrics</li>
+                    <li>Build operational dashboards for daily SOC activities</li>
+                    <li>Set up automated reports for compliance requirements</li>
+                    <li>Use color coding for priority and status visualization</li>
+                    <li>Include trend analysis for month-over-month comparisons</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="jira-card">
+            <h2 class="section-title">
+                <span class="section-icon">✅</span>
+                Jira Security Best Practices
+            </h2>
+
+            <div class="security-tip">
+                <h4>🔒 Security Configuration Checklist</h4>
+                <ul class="checklist">
+                    <li>Enable two-factor authentication for all users</li>
+                    <li>Implement role-based access control (RBAC)</li>
+                    <li>Use project-level security for sensitive incidents</li>
+                    <li>Enable audit logging for all administrative actions</li>
+                    <li>Regularly review and clean up user permissions</li>
+                    <li>Use HTTPS for all Jira communications</li>
+                    <li>Implement IP allowlisting for admin access</li>
+                    <li>Regular backup of Jira data and configurations</li>
+                    <li>Monitor for suspicious user activities</li>
+                    <li>Keep Jira updated with latest security patches</li>
+                </ul>
+            </div>
+
+            <div class="integration-box">
+                <h4>🎯 Interview Ready Points about Jira</h4>
+                <ul>
+                    <li><strong>Workflow Management:</strong> "I've designed custom workflows for incident response that automate escalation based on SLA timers and severity levels."</li>
+                    <li><strong>Integration Experience:</strong> "I've integrated Jira with Splunk using REST APIs to automatically create tickets from high-priority security alerts."</li>
+                    <li><strong>Metrics and Reporting:</strong> "I built executive dashboards showing MTTR, incident volume trends, and compliance status using JQL queries and gadgets."</li>
+                    <li><strong>Automation:</strong> "I've used Jira Automation rules to assign tickets based on asset criticality and notify stakeholders via Slack integration."</li>
+                    <li><strong>Compliance:</strong> "I've structured Jira projects to track PCI-DSS and SOX compliance requirements with custom fields for evidence management."</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        function copyToClipboard(button) {
+            const codeBlock = button.parentElement;
+            const text = codeBlock.textContent.replace('Copy', '').trim();
+            navigator.clipboard.writeText(text).then(function() {
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>

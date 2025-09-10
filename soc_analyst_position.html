@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOC Analyst - Cybersecurity Position</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.3) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+            z-index: -1;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(1deg); }
+            66% { transform: translateY(10px) rotate(-1deg); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+            animation: gradientShift 3s ease-in-out infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(10px); }
+        }
+
+        .job-title {
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #667eea, #764ba2, #f093fb);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            animation: titlePulse 2s ease-in-out infinite;
+            position: relative;
+        }
+        
+        @keyframes titlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        
+        .job-title::after {
+            content: '🛡️';
+            position: absolute;
+            right: -50px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.8em;
+            animation: iconSpin 4s linear infinite;
+        }
+        
+        @keyframes iconSpin {
+            0% { transform: translateY(-50%) rotate(0deg); }
+            100% { transform: translateY(-50%) rotate(360deg); }
+        }
+
+        .company-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            margin: 10px;
+            font-size: 1.1em;
+        }
+
+        .job-meta {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 10px 20px;
+            border-radius: 15px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .meta-icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #e9ecef;
+        }
+
+        .card-icon {
+            font-size: 2.5em;
+            margin-right: 15px;
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .requirements .card-icon {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+
+        .responsibilities .card-icon {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        }
+
+        .card-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .requirements-list, .responsibilities-list {
+            list-style: none;
+        }
+
+        .requirements-list li, .responsibilities-list li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .requirements-list li:hover, .responsibilities-list li:hover {
+            background: rgba(102, 126, 234, 0.05);
+            padding-left: 35px;
+        }
+
+        .requirements-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 8px;
+            color: #4ecdc4;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .responsibilities-list li:before {
+            content: "⚡";
+            position: absolute;
+            left: 8px;
+            font-size: 1.1em;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, rgba(255, 235, 59, 0.3) 0%, rgba(255, 235, 59, 0.3) 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .certifications {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .certifications h3 {
+            text-align: center;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .cert-badge {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .cert-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .cert-badge.preferred {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+        }
+
+        .cert-badge.preferred:hover {
+            box-shadow: 0 8px 20px rgba(78, 205, 196, 0.4);
+        }
+
+        .apply-section {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .apply-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 20px 50px;
+            border-radius: 50px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .apply-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .tools-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .tool-item {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .tool-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(240, 147, 251, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .job-title {
+                font-size: 2em;
+            }
+            
+            .job-meta {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .cert-grid, .tools-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .floating-icons {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .floating-icon {
+            position: absolute;
+            opacity: 0.1;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-icon:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .floating-icon:nth-child(2) { top: 20%; right: 10%; animation-delay: 2s; }
+        .floating-icon:nth-child(3) { bottom: 10%; left: 15%; animation-delay: 4s; }
+        .floating-icon:nth-child(4) { bottom: 20%; right: 15%; animation-delay: 1s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-icons">
+        <div class="floating-icon" style="font-size: 3em;">🛡️</div>
+        <div class="floating-icon" style="font-size: 2.5em;">🔒</div>
+        <div class="floating-icon" style="font-size: 3.5em;">🖥️</div>
+        <div class="floating-icon" style="font-size: 2.8em;">⚡</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="job-title">🛡️ SOC Analyst</div>
+            <div class="company-badge">Cybersecurity Excellence</div>
+            
+            <div class="job-meta">
+                <div class="meta-item">
+                    <span class="meta-icon">💼</span>
+                    <span>1-2 Years Experience</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-icon">🏢</span>
+                    <span>SOC Environment</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-icon">🌍</span>
+                    <span>Cybersecurity</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-icon">⚡</span>
+                    <span>Incident Response</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="card requirements">
+                <div class="card-header">
+                    <div class="card-icon">🎯</div>
+                    <div class="card-title">Requirements & Skills</div>
+                </div>
+                <ul class="requirements-list">
+                    <li><span class="highlight">1–2 years</span> of experience in a SOC or similar cybersecurity role</li>
+                    <li>Strong knowledge of <span class="highlight">networking protocols</span>, Linux/Windows OS, and system hardening</li>
+                    <li>Hands-on experience in <span class="highlight">incident response</span> and digital forensics</li>
+                    <li>Familiarity with cybersecurity tools like <span class="highlight">ELK Stack, TheHive, Cortex, MISP, OpenCTI, and Jira</span></li>
+                    <li>Understanding of <span class="highlight">Active Directory</span> architecture and attack vectors</li>
+                    <li>Working knowledge of <span class="highlight">OWASP Top 10</span> vulnerabilities and mitigation techniques</li>
+                    <li>Proficiency in query languages such as <span class="highlight">KQL and ESQL</span> for log analysis</li>
+                    <li>Excellent <span class="highlight">written and verbal communication</span> skills</li>
+                    <li>Familiarity with <span class="highlight">MITRE ATT&CK and NIST CSF</span> (a plus)</li>
+                </ul>
+            </div>
+
+            <div class="card responsibilities">
+                <div class="card-header">
+                    <div class="card-icon">⚡</div>
+                    <div class="card-title">Roles & Responsibilities</div>
+                </div>
+                <ul class="responsibilities-list">
+                    <li>Continuously <span class="highlight">monitor security logs</span> and alerts to detect potential threats</li>
+                    <li>Conduct <span class="highlight">triage, investigation, and documentation</span> of incidents using forensic tools</li>
+                    <li><span class="highlight">Harden Linux and Windows</span> systems against known vulnerabilities</li>
+                    <li>Create and refine <span class="highlight">security use cases</span> based on OWASP Top 10 and AD attack techniques</li>
+                    <li>Develop and maintain <span class="highlight">custom detection rules</span> for enhanced SOC monitoring</li>
+                    <li>Optimize and manage security tools like <span class="highlight">ELK, Cortex, and MISP</span> for effective response</li>
+                    <li>Collaborate with <span class="highlight">cross-functional teams</span> to ensure compliance and integrate security best practices</li>
+                    <li>Simulate <span class="highlight">threat scenarios</span> and participate in tabletop exercises</li>
+                    <li>Regularly communicate <span class="highlight">cybersecurity updates</span> and incidents to internal stakeholders</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="tools-section">
+            <h3 style="text-align: center; margin-bottom: 20px; color: #333; font-size: 1.8em;">🛠️ Technologies & Tools</h3>
+            <div class="tools-grid">
+                <div class="tool-item">ELK Stack</div>
+                <div class="tool-item">TheHive</div>
+                <div class="tool-item">Cortex</div>
+                <div class="tool-item">MISP</div>
+                <div class="tool-item">OpenCTI</div>
+                <div class="tool-item">Jira</div>
+                <div class="tool-item">KQL</div>
+                <div class="tool-item">ESQL</div>
+                <div class="tool-item">Linux</div>
+                <div class="tool-item">Windows</div>
+                <div class="tool-item">Active Directory</div>
+                <div class="tool-item">OWASP</div>
+            </div>
+        </div>
+
+        <div class="certifications">
+            <h3>🏆 Relevant Certifications</h3>
+            <div class="cert-grid">
+                <div class="cert-badge">CompTIA Security+</div>
+                <div class="cert-badge">CEH</div>
+                <div class="cert-badge">BTL1</div>
+                <div class="cert-badge preferred">OSDA</div>
+                <div class="cert-badge preferred">MITRE ATT&CK</div>
+                <div class="cert-badge preferred">NIST CSF</div>
+            </div>
+        </div>
+
+        <div class="apply-section">
+            <h2 style="font-size: 2.2em; margin-bottom: 20px; color: #333;">Ready to Join Our Cybersecurity Team?</h2>
+            <p style="font-size: 1.2em; color: #666; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                Join our dynamic SOC team and help protect against the latest cyber threats. Make a real impact in cybersecurity!
+            </p>
+            <button class="apply-btn" onclick="window.open('#', '_blank')">
+                🚀 Apply Now
+            </button>
+            <div style="margin-top: 20px; font-size: 0.9em; color: #666;">
+                <p>📧 Email your resume to: careers@company.com</p>
+                <p>🔗 Or apply through our career portal</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate cards on scroll
+            const cards = document.querySelectorAll('.card');
+            
+            const animateOnScroll = () => {
+                cards.forEach(card => {
+                    const cardTop = card.getBoundingClientRect().top;
+                    const cardVisible = 150;
+                    
+                    if (cardTop < window.innerHeight - cardVisible) {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }
+                });
+            };
+
+            // Initialize animation
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(50px)';
+                card.style.transition = 'all 0.6s ease';
+            });
+
+            window.addEventListener('scroll', animateOnScroll);
+            animateOnScroll(); // Run once on load
+
+            // Tool items hover effect
+            const toolItems = document.querySelectorAll('.tool-item');
+            toolItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.05) rotate(5deg)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1) rotate(0deg)';
+                });
+            });
+
+            // Certificate badges click effect
+            const certBadges = document.querySelectorAll('.cert-badge');
+            certBadges.forEach(badge => {
+                badge.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1.05)';
+                    }, 150);
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 300);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

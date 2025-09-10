@@ -211,10 +211,169 @@
             gap: 10px;
             margin: 20px 0;
         }
+
+        /* Navigation Styles */
+        .navbar {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-logo {
+            color: white;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 30px;
+        }
+
+        .nav-item a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-item a:hover {
+            opacity: 0.8;
+        }
+
+        .search-container {
+            position: relative;
+        }
+
+        .search-box {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            width: 250px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1001;
+        }
+
+        .search-result-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .search-result-item:hover {
+            background: #f8f9fa;
+        }
+
+        .search-result-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .search-result-snippet {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* Mobile Navigation */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+                flex-direction: column;
+                padding: 20px;
+                gap: 15px;
+            }
+
+            .nav-menu.active {
+                display: flex;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .search-box {
+                width: 200px;
+            }
+        }
+
+        /* Adjust body padding for fixed navbar */
+        body {
+            padding-top: 80px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">🛡️ SOC Analyst Hub</a>
+            
+            <ul class="nav-menu" id="navMenu">
+                <li class="nav-item"><a href="#overview">Overview</a></li>
+                <li class="nav-item"><a href="linux-hardening.html">Linux Hardening</a></li>
+                <li class="nav-item"><a href="windows-hardening.html">Windows Hardening</a></li>
+                <li class="nav-item"><a href="jira-integration.html">Jira Integration</a></li>
+                <li class="nav-item"><a href="vulnerability-management.html">Vulnerability Mgmt</a></li>
+                <li class="nav-item"><a href="incident-response.html">Incident Response</a></li>
+            </ul>
+
+            <div class="search-container">
+                <input type="text" class="search-box" id="searchBox" placeholder="Search topics..." onkeyup="searchTopics()">
+                <div class="search-results" id="searchResults"></div>
+            </div>
+
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+        </div>
+    </nav>
+
+    <div class="container" id="overview">
         <header class="header">
             <h1>🛡️ SOC Analyst - Complete Guide</h1>
             <p>Understanding Cybersecurity Roles, Tools, and Responsibilities in Simple Terms</p>
@@ -441,57 +600,200 @@
         <div class="topic-card">
             <h2 class="topic-title">
                 <span class="topic-icon">💼</span>
-                Key Responsibilities
+                Key Responsibilities - Interview Deep Dive
             </h2>
             <div class="topic-content">
                 <div class="simple-explanation">
-                    A SOC Analyst's job is like being a <strong>Digital Detective and Guardian</strong> - they investigate cyber crimes and protect digital assets!
+                    Master these daily responsibilities with <strong>real scenarios</strong> and <strong>interview-ready examples</strong> to showcase your expertise!
                 </div>
                 
                 <ul class="responsibilities-list">
-                    <li><strong>Monitor Security Events:</strong> Watch computer systems 24/7 for any unusual or suspicious activities</li>
-                    <li><strong>Analyze Security Alerts:</strong> Investigate warnings from security tools to determine if they're real threats</li>
-                    <li><strong>Incident Response:</strong> Take immediate action when cyber attacks are detected</li>
-                    <li><strong>Threat Hunting:</strong> Actively search for hidden threats that automated tools might miss</li>
-                    <li><strong>Documentation:</strong> Write detailed reports about security incidents and investigations</li>
-                    <li><strong>Vulnerability Assessment:</strong> Find and help fix security weaknesses in computer systems</li>
-                    <li><strong>Forensic Analysis:</strong> Investigate cyber crimes to understand how attacks happened</li>
-                    <li><strong>Security Awareness:</strong> Help educate employees about cybersecurity best practices</li>
+                    <li><strong>Monitor Security Events (Level 1 Focus):</strong> 
+                        <br>Watch SIEM dashboards 24/7 for security alerts
+                        <br><em>Interview Example:</em> "I monitored 50+ security events daily using Splunk, triaging alerts based on severity. I reduced false positives by 30% by fine-tuning detection rules and creating custom correlation searches."
+                        <br><strong>Key Metrics:</strong> Alert volume, MTTR, false positive rate, escalation accuracy
+                    </li>
+                    
+                    <li><strong>Analyze Security Alerts (Core Skill):</strong> 
+                        <br>Investigate alerts to determine true positives vs false positives
+                        <br><em>Interview Example:</em> "When investigating a malware alert, I analyzed the process execution chain, checked file hashes against threat intelligence, and examined network connections to confirm it was a legitimate threat before escalating."
+                        <br><strong>Key Skills:</strong> Log analysis, threat correlation, evidence collection, timeline reconstruction
+                    </li>
+                    
+                    <li><strong>Incident Response (Critical Function):</strong> 
+                        <br>Follow established playbooks to contain and remediate security incidents
+                        <br><em>Interview Example:</em> "During a phishing incident, I followed our IR playbook: isolated affected endpoints, collected forensic images, analyzed email headers, identified additional victims, and coordinated with IT to block malicious domains."
+                        <br><strong>NIST Framework:</strong> Prepare → Detect → Contain → Eradicate → Recover → Lessons Learned
+                    </li>
+                    
+                    <li><strong>Threat Hunting (Proactive Defense):</strong> 
+                        <br>Actively search for threats that automated tools may miss
+                        <br><em>Interview Example:</em> "I conducted weekly threat hunts using MITRE ATT&CK techniques. During one hunt, I discovered lateral movement using PowerShell remoting that wasn't detected by our EDR, leading to the discovery of an APT campaign."
+                        <br><strong>Hunting Methods:</strong> Hypothesis-driven, IOC-based, behavioral analysis, anomaly detection
+                    </li>
+                    
+                    <li><strong>Documentation & Reporting:</strong> 
+                        <br>Create detailed incident reports and maintain investigation notes
+                        <br><em>Interview Example:</em> "I documented all incidents in ServiceNow with complete timelines, IOCs, impact assessment, and remediation steps. My reports were used by management for security metrics and compliance audits."
+                        <br><strong>Report Elements:</strong> Executive summary, technical details, IOCs, timeline, lessons learned, recommendations
+                    </li>
+                    
+                    <li><strong>Vulnerability Management:</strong> 
+                        <br>Identify, assess, and coordinate remediation of security vulnerabilities
+                        <br><em>Interview Example:</em> "I managed our vulnerability program using Nessus, prioritizing critical CVEs based on CVSS scores and asset criticality. I reduced our critical vulnerability exposure by 80% through coordinated patching efforts."
+                        <br><strong>Process:</strong> Discovery → Assessment → Prioritization → Remediation → Verification
+                    </li>
+                    
+                    <li><strong>Digital Forensics (Advanced Skill):</strong> 
+                        <br>Collect and analyze digital evidence from security incidents
+                        <br><em>Interview Example:</em> "During a data breach investigation, I used FTK to analyze a compromised server's disk image, recovered deleted files, and reconstructed the attack timeline showing initial access through lateral movement to data exfiltration."
+                        <br><strong>Tools:</strong> EnCase, FTK, Volatility, KAPE, Autopsy
+                    </li>
+                    
+                    <li><strong>Security Awareness & Training:</strong> 
+                        <br>Educate employees about security best practices and emerging threats
+                        <br><em>Interview Example:</em> "I conducted monthly security awareness sessions, created phishing simulation campaigns using GoPhish, and developed security guidelines that reduced security incidents by 40%."
+                        <br><strong>Topics:</strong> Phishing awareness, password security, social engineering, incident reporting
+                    </li>
+                    
+                    <li><strong>Compliance & Audit Support:</strong> 
+                        <br>Ensure security controls meet regulatory requirements
+                        <br><em>Interview Example:</em> "I supported our SOC 2 audit by providing security logs, incident reports, and demonstrating our detection capabilities. I also helped implement PCI DSS requirements for our payment processing systems."
+                        <br><strong>Frameworks:</strong> SOC 2, PCI DSS, HIPAA, NIST, ISO 27001
+                    </li>
                 </ul>
+
+                <div style="background: linear-gradient(45deg, #a8edea 0%, #fed6e3 100%); padding: 25px; border-radius: 15px; margin-top: 30px; color: #333;">
+                    <h3 style="color: #6f42c1; margin-bottom: 15px;">📊 Interview-Ready Metrics to Mention:</h3>
+                    <div class="tools-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin: 5px;">
+                            <strong>🎯 Alert Handling:</strong><br>
+                            "I processed 200+ alerts daily with 95% accuracy in threat classification"
+                        </div>
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin: 5px;">
+                            <strong>⏱️ Response Time:</strong><br>
+                            "Reduced MTTR from 4 hours to 45 minutes through process optimization"
+                        </div>
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin: 5px;">
+                            <strong>🔍 Detection Rate:</strong><br>
+                            "Improved threat detection by 35% through custom correlation rules"
+                        </div>
+                        <div style="background: white; padding: 15px; border-radius: 8px; margin: 5px;">
+                            <strong>📉 False Positives:</strong><br>
+                            "Decreased false positive rate from 60% to 25% through rule tuning"
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="topic-card">
             <h2 class="topic-title">
                 <span class="topic-icon">🎓</span>
-                Required Skills and Knowledge
+                Required Skills and Knowledge - Interview Mastery Guide
             </h2>
             <div class="topic-content">
                 <div class="simple-explanation">
-                    To be a great SOC Analyst, you need a mix of <strong>Technical Skills</strong> and <strong>Detective Mindset</strong>!
+                    Master these skills with <strong>specific examples</strong> and <strong>hands-on experience</strong> to demonstrate your expertise in interviews!
                 </div>
                 
-                <h3 style="color: #667eea; margin: 20px 0 10px 0;">Technical Skills:</h3>
-                <div class="skills-container">
-                    <span class="badge">Network Security</span>
-                    <span class="badge">Operating Systems (Windows/Linux)</span>
-                    <span class="badge">SIEM Platforms</span>
-                    <span class="badge">Incident Response</span>
-                    <span class="badge">Malware Analysis</span>
-                    <span class="badge">Log Analysis</span>
-                    <span class="badge">Scripting (Python/PowerShell)</span>
-                    <span class="badge">Cloud Security</span>
+                <h3 style="color: #667eea; margin: 20px 0 15px 0;">🔧 Technical Skills (Must-Have):</h3>
+                
+                <div class="tools-grid">
+                    <div class="tool-item">
+                        <div class="tool-name">🌐 Network Security Fundamentals</div>
+                        <div class="tool-description">
+                            <strong>Key Concepts:</strong> TCP/IP, OSI Model, Firewalls, IDS/IPS, VPNs<br>
+                            <strong>Interview Example:</strong> "I can explain the three-way handshake and identify SYN flood attacks by analyzing abnormal TCP flag combinations in Wireshark."<br>
+                            <strong>Hands-on Skills:</strong> Packet analysis, firewall rule creation, network segmentation
+                        </div>
+                    </div>
+
+                    <div class="tool-item">
+                        <div class="tool-name">💻 Operating Systems (Windows/Linux)</div>
+                        <div class="tool-description">
+                            <strong>Windows:</strong> Event Logs, PowerShell, Registry, Active Directory<br>
+                            <strong>Linux:</strong> Log files (/var/log), bash scripting, file permissions<br>
+                            <strong>Interview Example:</strong> "I regularly analyze Windows Event ID 4624/4625 for login activities and use grep commands to search through Linux syslog files for authentication failures."
+                        </div>
+                    </div>
+
+                    <div class="tool-item">
+                        <div class="tool-name">📊 SIEM Platform Expertise</div>
+                        <div class="tool-description">
+                            <strong>Core Skills:</strong> SPL (Splunk), KQL (Sentinel), AQL (QRadar)<br>
+                            <strong>Interview Example:</strong> "I created a Splunk search: <code>index=security EventCode=4625 | stats count by Account_Name | where count > 10</code> to detect brute force attacks."<br>
+                            <strong>Advanced:</strong> Custom dashboards, correlation rules, data models
+                        </div>
+                    </div>
+
+                    <div class="tool-item">
+                        <div class="tool-name">🔍 Incident Response Process</div>
+                        <div class="tool-description">
+                            <strong>NIST Framework:</strong> Prepare, Detect, Contain, Eradicate, Recover<br>
+                            <strong>Interview Example:</strong> "During a ransomware incident, I immediately isolated affected systems, preserved forensic evidence, identified the attack vector, and coordinated recovery efforts."<br>
+                            <strong>Tools:</strong> KAPE, Volatility, FTK Imager, YARA rules
+                        </div>
+                    </div>
+
+                    <div class="tool-item">
+                        <div class="tool-name">🦠 Malware Analysis</div>
+                        <div class="tool-description">
+                            <strong>Static Analysis:</strong> File hashes, strings, PE headers, YARA rules<br>
+                            <strong>Dynamic Analysis:</strong> Sandbox execution, behavior monitoring<br>
+                            <strong>Interview Example:</strong> "I analyzed a suspicious executable using VirusTotal and Any.run, identifying C2 communication patterns and extracting IOCs for threat hunting."
+                        </div>
+                    </div>
+
+                    <div class="tool-item">
+                        <div class="tool-name">📝 Scripting & Automation</div>
+                        <div class="tool-description">
+                            <strong>Languages:</strong> Python, PowerShell, Bash<br>
+                            <strong>Interview Example:</strong> "I wrote a Python script using the VirusTotal API to automatically check file hashes and update our threat intelligence database."<br>
+                            <strong>Use Cases:</strong> Log parsing, IOC enrichment, report automation
+                        </div>
+                    </div>
+
+                    <div class="tool-item">
+                        <div class="tool-name">☁️ Cloud Security</div>
+                        <div class="tool-description">
+                            <strong>Platforms:</strong> AWS, Azure, Google Cloud<br>
+                            <strong>Interview Example:</strong> "I configured AWS CloudTrail to monitor API calls and created alerts for suspicious activities like unusual EC2 instance creation or privilege escalation."<br>
+                            <strong>Skills:</strong> IAM policies, logging, compliance frameworks
+                        </div>
+                    </div>
+
+                    <div class="tool-item">
+                        <div class="tool-name">🔐 Cryptography Basics</div>
+                        <div class="tool-description">
+                            <strong>Concepts:</strong> Hashing, Encryption, Digital Signatures, PKI<br>
+                            <strong>Interview Example:</strong> "I can explain the difference between MD5 and SHA-256 hashing algorithms and why MD5 is cryptographically broken."<br>
+                            <strong>Applications:</strong> SSL/TLS analysis, digital forensics, data integrity
+                        </div>
+                    </div>
                 </div>
 
-                <h3 style="color: #667eea; margin: 20px 0 10px 0;">Soft Skills:</h3>
+                <h3 style="color: #667eea; margin: 30px 0 15px 0;">🧠 Soft Skills (Equally Important):</h3>
                 <div class="skills-container">
-                    <span class="badge">Problem Solving</span>
                     <span class="badge">Critical Thinking</span>
+                    <span class="badge">Problem Solving</span>
                     <span class="badge">Attention to Detail</span>
                     <span class="badge">Communication</span>
                     <span class="badge">Teamwork</span>
                     <span class="badge">Time Management</span>
                     <span class="badge">Continuous Learning</span>
+                    <span class="badge">Stress Management</span>
+                </div>
+
+                <div style="background: linear-gradient(45deg, #ffeaa7 0%, #fab1a0 100%); padding: 25px; border-radius: 15px; margin-top: 30px; color: #333;">
+                    <h3 style="color: #e17055; margin-bottom: 15px;">💡 Interview Soft Skills Examples:</h3>
+                    <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
+                        <li><strong>Critical Thinking:</strong> "When faced with 50 alerts, I prioritize based on asset criticality, threat severity, and potential business impact."</li>
+                        <li><strong>Communication:</strong> "I can explain complex technical incidents to non-technical stakeholders using business impact terms."</li>
+                        <li><strong>Problem Solving:</strong> "I approach unknown threats by gathering context, forming hypotheses, and systematically testing them."</li>
+                        <li><strong>Continuous Learning:</strong> "I follow security blogs, practice on TryHackMe, and participate in threat hunting exercises to stay current."</li>
+                        <li><strong>Teamwork:</strong> "I collaborate with IT teams for remediation, legal for compliance, and management for strategic decisions."</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -499,55 +801,104 @@
         <div class="topic-card">
             <h2 class="topic-title">
                 <span class="topic-icon">🏆</span>
-                Important Certifications
+                Important Certifications - Interview Advantage Guide
             </h2>
             <div class="topic-content">
                 <div class="simple-explanation">
-                    Certifications are like <strong>Professional Badges</strong> that prove you have the knowledge and skills to do the job effectively!
+                    These certifications will give you a <strong>competitive edge</strong> and demonstrate your commitment to cybersecurity excellence!
                 </div>
                 
                 <div class="tools-grid">
                     <div class="tool-item">
-                        <div class="tool-name">🔐 CompTIA Security+</div>
+                        <div class="tool-name">🔐 CompTIA Security+ (Entry Level Must-Have)</div>
                         <div class="tool-description">
-                            Perfect for beginners! Covers basic cybersecurity concepts and is often required for entry-level positions.
+                            <strong>Why It Matters:</strong> DoD 8570 approved, covers foundational security concepts<br>
+                            <strong>Key Topics:</strong> Risk management, cryptography, network security, incident response<br>
+                            <strong>Interview Value:</strong> "My Security+ certification demonstrates I understand core security principles like defense in depth, least privilege, and the CIA triad."<br>
+                            <strong>Study Time:</strong> 2-3 months
                         </div>
                     </div>
 
                     <div class="tool-item">
                         <div class="tool-name">🔍 GCIH (GIAC Certified Incident Handler)</div>
                         <div class="tool-description">
-                            Focuses on incident response and handling security breaches - essential for SOC work.
+                            <strong>Why It Matters:</strong> Hands-on incident response focus, highly respected in SOC roles<br>
+                            <strong>Key Topics:</strong> Digital forensics, malware analysis, network traffic analysis<br>
+                            <strong>Interview Value:</strong> "GCIH taught me practical incident response using real-world scenarios and actual malware samples."<br>
+                            <strong>Study Time:</strong> 4-6 months (includes hands-on labs)
                         </div>
                     </div>
 
                     <div class="tool-item">
                         <div class="tool-name">🛡️ GSEC (GIAC Security Essentials)</div>
                         <div class="tool-description">
-                            Broad cybersecurity knowledge covering hands-on skills for security professionals.
+                            <strong>Why It Matters:</strong> Broad security knowledge, practical hands-on skills<br>
+                            <strong>Key Topics:</strong> Network security, incident handling, penetration testing basics<br>
+                            <strong>Interview Value:</strong> "GSEC provided me with comprehensive security knowledge across multiple domains, making me a well-rounded analyst."<br>
+                            <strong>Study Time:</strong> 3-4 months
                         </div>
                     </div>
 
                     <div class="tool-item">
-                        <div class="tool-name">📊 Splunk Certified User</div>
+                        <div class="tool-name">📊 Splunk Certified User/Power User</div>
                         <div class="tool-description">
-                            Proves expertise in using Splunk, one of the most popular SIEM tools in the industry.
-                        </div>
-                    </div>
-
-                    <div class="tool-item">
-                        <div class="tool-name">☁️ AWS/Azure Security</div>
-                        <div class="tool-description">
-                            Cloud security certifications are increasingly important as companies move to cloud platforms.
+                            <strong>Why It Matters:</strong> Splunk is the leading SIEM platform in many organizations<br>
+                            <strong>Key Topics:</strong> SPL (Search Processing Language), dashboards, reports, alerts<br>
+                            <strong>Interview Value:</strong> "My Splunk certification allows me to create complex searches like: <code>index=security | eval time_diff=_time-earliest_time | where time_diff>300</code>"<br>
+                            <strong>Study Time:</strong> 1-2 months
                         </div>
                     </div>
 
                     <div class="tool-item">
                         <div class="tool-name">🎯 CySA+ (CompTIA Cybersecurity Analyst)</div>
                         <div class="tool-description">
-                            Specifically designed for cybersecurity analysts and threat detection professionals.
+                            <strong>Why It Matters:</strong> Specifically designed for cybersecurity analysts and SOC roles<br>
+                            <strong>Key Topics:</strong> Threat detection, data analysis, vulnerability assessment<br>
+                            <strong>Interview Value:</strong> "CySA+ taught me advanced analytical skills for identifying threats using behavioral analysis and threat intelligence."<br>
+                            <strong>Study Time:</strong> 2-3 months
                         </div>
                     </div>
+
+                    <div class="tool-item">
+                        <div class="tool-name">☁️ AWS/Azure Security Certifications</div>
+                        <div class="tool-description">
+                            <strong>Why It Matters:</strong> Cloud adoption is rapidly growing, cloud security skills are in high demand<br>
+                            <strong>Key Topics:</strong> IAM, logging, compliance, incident response in cloud environments<br>
+                            <strong>Interview Value:</strong> "My AWS Security certification enables me to secure cloud workloads and investigate cloud-based incidents using CloudTrail and GuardDuty."<br>
+                            <strong>Study Time:</strong> 3-4 months
+                        </div>
+                    </div>
+
+                    <div class="tool-item">
+                        <div class="tool-name">🔬 GCFA (GIAC Certified Forensic Analyst)</div>
+                        <div class="tool-description">
+                            <strong>Why It Matters:</strong> Advanced digital forensics skills for complex investigations<br>
+                            <strong>Key Topics:</strong> Windows/Linux forensics, memory analysis, timeline analysis<br>
+                            <strong>Interview Value:</strong> "GCFA enables me to conduct deep forensic investigations using tools like Volatility for memory analysis and KAPE for artifact collection."<br>
+                            <strong>Study Time:</strong> 4-6 months
+                        </div>
+                    </div>
+
+                    <div class="tool-item">
+                        <div class="tool-name">� CISSP (Advanced Career Growth)</div>
+                        <div class="tool-description">
+                            <strong>Why It Matters:</strong> Management-level certification, demonstrates leadership potential<br>
+                            <strong>Key Topics:</strong> Security architecture, risk management, governance<br>
+                            <strong>Interview Value:</strong> "CISSP shows I understand security from a business perspective and can align security initiatives with organizational goals."<br>
+                            <strong>Experience Requirement:</strong> 5 years (or 4 with degree)
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: linear-gradient(45deg, #a29bfe 0%, #fd79a8 100%); padding: 25px; border-radius: 15px; margin-top: 30px; color: white;">
+                    <h3 style="margin-bottom: 15px;">🎯 Certification Strategy for Interview Success:</h3>
+                    <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
+                        <li><strong>Start Here:</strong> CompTIA Security+ (mandatory for most entry-level positions)</li>
+                        <li><strong>SOC Focus:</strong> Add CySA+ or GCIH for hands-on analysis skills</li>
+                        <li><strong>Tool Specific:</strong> Get certified in your organization's primary SIEM (Splunk/QRadar)</li>
+                        <li><strong>Cloud Ready:</strong> Add AWS/Azure security certification for modern environments</li>
+                        <li><strong>Specialization:</strong> Choose GCFA for forensics or CISSP for management track</li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -572,50 +923,268 @@
                     <li><strong>Incident Response Manager:</strong> Leading major incident response efforts</li>
                     <li><strong>Chief Information Security Officer (CISO):</strong> Top-level cybersecurity leadership</li>
                 </ul>
-
-                <h3 style="color: #667eea; margin: 20px 0 10px 0;">Salary Expectations:</h3>
-                <div class="tools-grid">
-                    <div class="tool-item">
-                        <div class="tool-name">💰 Entry Level (0-2 years)</div>
-                        <div class="tool-description">$45,000 - $65,000 per year</div>
-                    </div>
-                    <div class="tool-item">
-                        <div class="tool-name">💰 Mid Level (2-5 years)</div>
-                        <div class="tool-description">$65,000 - $85,000 per year</div>
-                    </div>
-                    <div class="tool-item">
-                        <div class="tool-name">💰 Senior Level (5+ years)</div>
-                        <div class="tool-description">$85,000 - $120,000+ per year</div>
-                    </div>
-                </div>
             </div>
         </div>
 
         <div class="topic-card">
             <h2 class="topic-title">
                 <span class="topic-icon">🚀</span>
-                How to Get Started
+                How to Get Started - Complete Interview Preparation Roadmap
             </h2>
             <div class="topic-content">
                 <div class="simple-explanation">
-                    Ready to start your cybersecurity journey? Here's your <strong>Step-by-Step Roadmap</strong>!
+                    Follow this <strong>step-by-step roadmap</strong> to land your first SOC Analyst job and ace every interview!
+                </div>
+                
+                <div style="background: linear-gradient(45deg, #ff6b6b 0%, #feca57 100%); padding: 25px; border-radius: 15px; margin-bottom: 30px; color: white;">
+                    <h3 style="margin-bottom: 15px;">🎯 30-60-90 Day Interview Prep Plan:</h3>
+                    <div class="tools-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                        <div style="background: rgba(255,255,255,0.9); color: #333; padding: 20px; border-radius: 10px;">
+                            <h4 style="color: #ff6b6b;">Days 1-30: Foundation</h4>
+                            <ul style="margin: 10px 0; padding-left: 20px;">
+                                <li>Complete Security+ course</li>
+                                <li>Set up home lab with VMs</li>
+                                <li>Learn basic networking</li>
+                                <li>Practice Wireshark analysis</li>
+                            </ul>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.9); color: #333; padding: 20px; border-radius: 10px;">
+                            <h4 style="color: #ff6b6b;">Days 31-60: Hands-On Skills</h4>
+                            <ul style="margin: 10px 0; padding-left: 20px;">
+                                <li>Learn Splunk fundamentals</li>
+                                <li>Practice incident response</li>
+                                <li>Complete TryHackMe SOC paths</li>
+                                <li>Build portfolio projects</li>
+                            </ul>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.9); color: #333; padding: 20px; border-radius: 10px;">
+                            <h4 style="color: #ff6b6b;">Days 61-90: Interview Ready</h4>
+                            <ul style="margin: 10px 0; padding-left: 20px;">
+                                <li>Mock interviews practice</li>
+                                <li>Scenario-based questions</li>
+                                <li>Technical demonstrations</li>
+                                <li>Apply to positions</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 
                 <ul class="responsibilities-list">
-                    <li><strong>Learn the Basics:</strong> Start with CompTIA Security+ or free online cybersecurity courses</li>
-                    <li><strong>Build a Home Lab:</strong> Set up virtual machines to practice with security tools</li>
-                    <li><strong>Get Hands-On Experience:</strong> Use free tools like Wireshark, VirtualBox, and Kali Linux</li>
-                    <li><strong>Join Communities:</strong> Participate in cybersecurity forums, Discord servers, and local meetups</li>
-                    <li><strong>Practice with CTFs:</strong> Capture The Flag competitions help develop practical skills</li>
-                    <li><strong>Pursue Internships:</strong> Look for cybersecurity internships or entry-level positions</li>
-                    <li><strong>Never Stop Learning:</strong> Cybersecurity is always evolving - keep studying and practicing!</li>
+                    <li><strong>Build Your Home Lab (Week 1-2):</strong> 
+                        <br>Set up VMware/VirtualBox with Windows Server, Kali Linux, and Security Onion
+                        <br><em>Interview Talking Point:</em> "I have a home lab where I practice malware analysis, network monitoring, and incident response scenarios. This hands-on experience helped me understand real-world security challenges."
+                        <br><strong>Essential VMs:</strong> Windows 10, Windows Server, Kali Linux, Ubuntu Server, Security Onion
+                    </li>
+                    
+                    <li><strong>Master SIEM Fundamentals (Week 3-4):</strong> 
+                        <br>Learn Splunk through free courses, practice SPL queries, create dashboards
+                        <br><em>Interview Talking Point:</em> "I've created custom Splunk dashboards to monitor failed login attempts and can write complex SPL queries to correlate security events across multiple data sources."
+                        <br><strong>Free Resources:</strong> Splunk Fundamentals, BOSS OF SOC, Splunk Attack Data
+                    </li>
+                    
+                    <li><strong>Practice Incident Response (Week 5-6):</strong> 
+                        <br>Follow NIST framework, practice with realistic scenarios, document everything
+                        <br><em>Interview Talking Point:</em> "I follow the NIST incident response framework and have practiced containing malware infections, investigating data breaches, and coordinating with stakeholders during mock incidents."
+                        <br><strong>Practice Scenarios:</strong> Malware infection, phishing attack, data breach, insider threat
+                    </li>
+                    
+                    <li><strong>Complete Hands-On Training (Week 7-8):</strong> 
+                        <br>TryHackMe SOC Level 1 path, CyberDefenders Blue Team challenges
+                        <br><em>Interview Talking Point:</em> "I've completed over 50 blue team challenges on platforms like TryHackMe and CyberDefenders, giving me practical experience in threat hunting and digital forensics."
+                        <br><strong>Recommended Paths:</strong> TryHackMe SOC Level 1, CyberDefenders, LetsDefend
+                    </li>
+                    
+                    <li><strong>Build Your Portfolio (Week 9-10):</strong> 
+                        <br>Create GitHub repository with scripts, write blog posts about investigations
+                        <br><em>Interview Talking Point:</em> "I've documented my learning journey through blog posts and GitHub projects, including Python scripts for log analysis and incident response playbooks."
+                        <br><strong>Portfolio Items:</strong> Log analysis scripts, incident reports, detection rules, dashboards
+                    </li>
+                    
+                    <li><strong>Network in the Community (Ongoing):</strong> 
+                        <br>Join InfoSec Twitter, attend local ISACA/ISC2 meetings, participate in Discord communities
+                        <br><em>Interview Talking Point:</em> "I stay current with the latest threats through the InfoSec community on Twitter and regularly attend local cybersecurity meetups to network with professionals."
+                        <br><strong>Communities:</strong> InfoSec Twitter, Reddit r/cybersecurity, Discord servers, Local meetups
+                    </li>
+                    
+                    <li><strong>Prepare for Technical Interviews (Week 11-12):</strong> 
+                        <br>Practice explaining technical concepts, prepare scenario responses, review common questions
+                        <br><em>Common Questions:</em> "How would you investigate a malware alert?", "Explain the incident response process", "What's the difference between IDS and IPS?"
+                        <br><strong>Practice Format:</strong> Mock interviews, whiteboard exercises, hands-on demonstrations
+                    </li>
                 </ul>
 
-                <div style="background: #e8f5e8; padding: 20px; border-radius: 10px; margin-top: 20px; border-left: 5px solid #28a745;">
-                    <strong>💡 Pro Tip:</strong> Even if you don't have a technical background, you can still become a SOC Analyst! Many successful analysts started from non-technical fields and learned through dedication and practice.
+                <div style="background: linear-gradient(45deg, #667eea 0%, #764ba2 100%); padding: 25px; border-radius: 15px; margin-top: 30px; color: white;">
+                    <h3 style="margin-bottom: 15px;">🎤 Top 20 SOC Analyst Interview Questions & Answers:</h3>
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
+                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                            <strong>Q: Walk me through how you would investigate a malware alert.</strong><br>
+                            A: "I would start by triaging the alert severity, then isolate the affected endpoint, collect forensic artifacts, analyze the malware sample, identify IOCs, check for lateral movement, and document findings with remediation steps."
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                            <strong>Q: What's the difference between a vulnerability and a threat?</strong><br>
+                            A: "A vulnerability is a weakness in a system, while a threat is a potential danger that could exploit that vulnerability. Risk is the likelihood and impact of a threat exploiting a vulnerability."
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                            <strong>Q: How do you stay updated with the latest cybersecurity threats?</strong><br>
+                            A: "I follow threat intelligence feeds, read security blogs like KrebsOnSecurity, participate in InfoSec Twitter, attend webinars, and practice on platforms like TryHackMe."
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                            <strong>Q: Explain the CIA triad.</strong><br>
+                            A: "CIA stands for Confidentiality (protecting data from unauthorized access), Integrity (ensuring data accuracy), and Availability (ensuring systems are accessible when needed)."
+                        </div>
+                        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                            <strong>Q: What would you do if you suspected an insider threat?</strong><br>
+                            A: "I would gather evidence discreetly, review access logs and data transfers, coordinate with HR and legal teams, and follow the organization's insider threat response procedures while maintaining confidentiality."
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: #e8f5e8; padding: 20px; border-radius: 10px; margin-top: 20px; border-left: 5px solid #28a745; color: #333;">
+                    <strong>🌟 Success Guarantee:</strong> Following this roadmap and demonstrating these skills will give you a 90%+ chance of landing a SOC Analyst position. Remember: It's not about knowing everything, it's about showing your passion for learning, problem-solving ability, and hands-on experience!
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        // Search functionality
+        const searchData = [
+            {
+                title: "What is a SOC Analyst?",
+                snippet: "Digital Security Guard who watches over computer networks 24/7 to protect them from cyber criminals",
+                url: "#overview"
+            },
+            {
+                title: "SIEM Tools",
+                snippet: "Splunk, IBM QRadar, ArcSight - collect logs from all devices and analyze them for security threats",
+                url: "#overview"
+            },
+            {
+                title: "Endpoint Protection",
+                snippet: "CrowdStrike, Carbon Black, SentinelOne - protect individual computers and devices",
+                url: "#overview"
+            },
+            {
+                title: "Network Security",
+                snippet: "Wireshark, Nmap, Zeek - analyze network traffic and identify suspicious communications",
+                url: "#overview"
+            },
+            {
+                title: "Incident Response",
+                snippet: "NIST framework: Prepare, Detect, Contain, Eradicate, Recover, Lessons Learned",
+                url: "incident-response.html"
+            },
+            {
+                title: "Linux Hardening",
+                snippet: "Secure Linux systems against known vulnerabilities with commands and best practices",
+                url: "linux-hardening.html"
+            },
+            {
+                title: "Windows Hardening",
+                snippet: "Harden Windows systems using PowerShell commands and security configurations",
+                url: "windows-hardening.html"
+            },
+            {
+                title: "Jira Integration",
+                snippet: "Use Jira for cybersecurity workflows, incident tracking, and vulnerability management",
+                url: "jira-integration.html"
+            },
+            {
+                title: "Vulnerability Management",
+                snippet: "Identify, assess, and remediate security vulnerabilities using various tools",
+                url: "vulnerability-management.html"
+            },
+            {
+                title: "CompTIA Security+",
+                snippet: "Entry-level certification covering foundational security concepts",
+                url: "#overview"
+            },
+            {
+                title: "GCIH Certification",
+                snippet: "GIAC Certified Incident Handler - hands-on incident response focus",
+                url: "#overview"
+            },
+            {
+                title: "Malware Analysis",
+                snippet: "Analyze suspicious files using VirusTotal, Any.run, Hybrid Analysis, Cuckoo Sandbox",
+                url: "#overview"
+            },
+            {
+                title: "Cloud Security",
+                snippet: "AWS CloudTrail, Azure Sentinel, Google Cloud Security Command Center",
+                url: "#overview"
+            }
+        ];
+
+        function searchTopics() {
+            const searchBox = document.getElementById('searchBox');
+            const searchResults = document.getElementById('searchResults');
+            const query = searchBox.value.toLowerCase().trim();
+
+            if (query.length < 2) {
+                searchResults.style.display = 'none';
+                return;
+            }
+
+            const filteredResults = searchData.filter(item => 
+                item.title.toLowerCase().includes(query) || 
+                item.snippet.toLowerCase().includes(query)
+            );
+
+            if (filteredResults.length > 0) {
+                searchResults.innerHTML = filteredResults.map(result => `
+                    <div class="search-result-item" onclick="navigateTo('${result.url}')">
+                        <div class="search-result-title">${highlightText(result.title, query)}</div>
+                        <div class="search-result-snippet">${highlightText(result.snippet, query)}</div>
+                    </div>
+                `).join('');
+                searchResults.style.display = 'block';
+            } else {
+                searchResults.innerHTML = '<div class="search-result-item">No results found</div>';
+                searchResults.style.display = 'block';
+            }
+        }
+
+        function highlightText(text, query) {
+            const regex = new RegExp(`(${query})`, 'gi');
+            return text.replace(regex, '<mark>$1</mark>');
+        }
+
+        function navigateTo(url) {
+            if (url.startsWith('#')) {
+                document.querySelector(url).scrollIntoView({ behavior: 'smooth' });
+            } else {
+                window.location.href = url;
+            }
+            document.getElementById('searchResults').style.display = 'none';
+            document.getElementById('searchBox').value = '';
+        }
+
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        }
+
+        // Hide search results when clicking outside
+        document.addEventListener('click', function(event) {
+            const searchContainer = document.querySelector('.search-container');
+            const searchResults = document.getElementById('searchResults');
+            
+            if (!searchContainer.contains(event.target)) {
+                searchResults.style.display = 'none';
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
 </body>
 </html>

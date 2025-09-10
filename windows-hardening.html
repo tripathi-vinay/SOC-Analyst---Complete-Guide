@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows System Hardening - Complete Security Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding-top: 80px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Navigation Styles */
+        .navbar {
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-logo {
+            color: white;
+            font-size: 1.5em;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 30px;
+        }
+
+        .nav-item a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-item a:hover {
+            opacity: 0.8;
+        }
+
+        .back-button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: background 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .hardening-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUp 0.8s ease-out forwards;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .hardening-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .hardening-card:nth-child(2) { animation-delay: 0.1s; }
+        .hardening-card:nth-child(3) { animation-delay: 0.2s; }
+        .hardening-card:nth-child(4) { animation-delay: 0.3s; }
+
+        .section-title {
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-icon {
+            font-size: 1.2em;
+            margin-right: 15px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .command-block {
+            background: #1e3a8a;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .command-block::before {
+            content: "PowerShell";
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #667eea;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .powershell-command {
+            color: #60a5fa;
+            font-weight: bold;
+        }
+
+        .registry-block {
+            background: #7c2d12;
+            color: #fed7aa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Consolas', 'Courier New', monospace;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .registry-block::before {
+            content: "Registry Editor";
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: #dc2626;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .command-description {
+            background: linear-gradient(45deg, #e3f2fd 0%, #f3e5f5 100%);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .security-tip {
+            background: linear-gradient(45deg, #fff3cd 0%, #ffeaa7 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #f39c12;
+        }
+
+        .security-tip h4 {
+            color: #e17055;
+            margin-bottom: 10px;
+        }
+
+        .vulnerability-alert {
+            background: linear-gradient(45deg, #f8d7da 0%, #f5c6cb 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #dc3545;
+        }
+
+        .vulnerability-alert h4 {
+            color: #721c24;
+            margin-bottom: 10px;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            background: #f8f9fa;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+            transition: background 0.3s ease;
+        }
+
+        .checklist li:hover {
+            background: #e9ecef;
+        }
+
+        .checklist li::before {
+            content: "✓";
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+        }
+
+        .tab {
+            background: none;
+            border: none;
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-weight: 500;
+        }
+
+        .tab.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 25px;
+            border-radius: 0 0 10px 10px;
+            border: 1px solid #e9ecef;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .copy-button:hover {
+            background: #5a67d8;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">🛡️ SOC Analyst Hub</a>
+            
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html">Overview</a></li>
+                <li class="nav-item"><a href="linux-hardening.html">Linux Hardening</a></li>
+                <li class="nav-item"><a href="windows-hardening.html">Windows Hardening</a></li>
+                <li class="nav-item"><a href="jira-integration.html">Jira Integration</a></li>
+                <li class="nav-item"><a href="vulnerability-management.html">Vulnerability Mgmt</a></li>
+                <li class="nav-item"><a href="incident-response.html">Incident Response</a></li>
+            </ul>
+
+            <a href="index.html" class="back-button">← Back to Overview</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header class="header">
+            <h1>🪟 Windows System Hardening</h1>
+            <p>Comprehensive Guide to Securing Windows Systems Against Known Vulnerabilities</p>
+        </header>
+
+        <div class="hardening-card">
+            <h2 class="section-title">
+                <span class="section-icon">🔄</span>
+                Windows Updates and Patch Management
+            </h2>
+            
+            <div class="security-tip">
+                <h4>🚨 Critical Priority</h4>
+                <p>Windows systems are frequently targeted. Enable automatic updates and regularly check for critical security patches from Microsoft.</p>
+            </div>
+
+            <div class="command-block">
+                <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+<span class="powershell-command"># Check for Windows Updates</span>
+Get-Module PSWindowsUpdate -ListAvailable
+Install-Module PSWindowsUpdate -Force
+Import-Module PSWindowsUpdate
+
+<span class="powershell-command"># Get available updates</span>
+Get-WUList
+
+<span class="powershell-command"># Install all updates</span>
+Install-WindowsUpdate -AcceptAll -AutoReboot
+
+<span class="powershell-command"># Check Windows Update service status</span>
+Get-Service wuauserv
+
+<span class="powershell-command"># Enable automatic updates via registry</span>
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "NoAutoUpdate" -Value 0
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" -Name "AUOptions" -Value 4
+
+<span class="powershell-command"># Check last boot time (reboot after updates)</span>
+Get-CimInstance -ClassName Win32_OperatingSystem | Select LastBootUpTime
+            </div>
+            <div class="command-description">
+                <strong>What this does:</strong> Ensures your Windows system has the latest security patches installed and configures automatic updates to prevent zero-day exploits.
+            </div>
+        </div>
+
+        <div class="hardening-card">
+            <h2 class="section-title">
+                <span class="section-icon">👤</span>
+                User Account Control (UAC) and Account Security
+            </h2>
+
+            <div class="vulnerability-alert">
+                <h4>⚠️ UAC Bypass Vulnerabilities</h4>
+                <p>Weak UAC settings and poor user account management are common attack vectors. Proper UAC configuration can prevent 70% of privilege escalation attacks.</p>
+            </div>
+
+            <div class="command-block">
+                <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+<span class="powershell-command"># Enable UAC at highest level</span>
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "ConsentPromptBehaviorAdmin" -Value 2
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" -Name "EnableLUA" -Value 1
+
+<span class="powershell-command"># Disable built-in Administrator account</span>
+Get-LocalUser Administrator | Disable-LocalUser
+
+<span class="powershell-command"># Create a new admin user</span>
+$SecurePassword = ConvertTo-SecureString "ComplexPassword123!" -AsPlainText -Force
+New-LocalUser "SecAdmin" -Password $SecurePassword -Description "Security Administrator"
+Add-LocalGroupMember -Group "Administrators" -Member "SecAdmin"
+
+<span class="powershell-command"># Set password policy</span>
+Set-LocalUser -Name "SecAdmin" -PasswordNeverExpires $false
+net accounts /maxpwage:90 /minpwage:1 /minpwlen:8 /uniquepw:5
+
+<span class="powershell-command"># List all local users</span>
+Get-LocalUser | Select Name, Enabled, LastLogon
+
+<span class="powershell-command"># Remove unnecessary users</span>
+Remove-LocalUser -Name "Guest"
+
+<span class="powershell-command"># Check for empty passwords</span>
+Get-LocalUser | Where-Object {$_.PasswordRequired -eq $false}
+            </div>
+
+            <div class="security-tip">
+                <h4>💡 Account Security Best Practices</h4>
+                <ul>
+                    <li>Always run with standard user privileges</li>
+                    <li>Use complex passwords (minimum 12 characters)</li>
+                    <li>Enable account lockout policies</li>
+                    <li>Regularly audit user accounts</li>
+                    <li>Implement multi-factor authentication</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="hardening-card">
+            <h2 class="section-title">
+                <span class="section-icon">🔥</span>
+                Windows Defender Firewall Configuration
+            </h2>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab(event, 'basic-firewall')">Basic Configuration</button>
+                <button class="tab" onclick="switchTab(event, 'advanced-firewall')">Advanced Rules</button>
+            </div>
+
+            <div id="basic-firewall" class="tab-content active">
+                <div class="command-block">
+                    <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+<span class="powershell-command"># Enable Windows Defender Firewall for all profiles</span>
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
+
+<span class="powershell-command"># Set default actions</span>
+Set-NetFirewallProfile -Profile Domain -DefaultInboundAction Block -DefaultOutboundAction Allow
+Set-NetFirewallProfile -Profile Public -DefaultInboundAction Block -DefaultOutboundAction Allow
+Set-NetFirewallProfile -Profile Private -DefaultInboundAction Block -DefaultOutboundAction Allow
+
+<span class="powershell-command"># Check firewall status</span>
+Get-NetFirewallProfile | Select Name, Enabled, DefaultInboundAction, DefaultOutboundAction
+
+<span class="powershell-command"># Allow Remote Desktop (if needed)</span>
+New-NetFirewallRule -DisplayName "Allow RDP" -Direction Inbound -Protocol TCP -LocalPort 3389 -Action Allow
+
+<span class="powershell-command"># Block specific ports</span>
+New-NetFirewallRule -DisplayName "Block Telnet" -Direction Inbound -Protocol TCP -LocalPort 23 -Action Block
+
+<span class="powershell-command"># View active firewall rules</span>
+Get-NetFirewallRule | Where-Object {$_.Enabled -eq 'True'} | Select DisplayName, Direction, Action
+                </div>
+                <div class="command-description">
+                    <strong>What this does:</strong> Configures Windows Defender Firewall with secure defaults and creates specific rules for essential services.
+                </div>
+            </div>
+
+            <div id="advanced-firewall" class="tab-content">
+                <div class="command-block">
+                    <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+<span class="powershell-command"># Create firewall rule for specific IP ranges</span>
+New-NetFirewallRule -DisplayName "Allow Corporate Network" -Direction Inbound -RemoteAddress 192.168.1.0/24 -Action Allow
+
+<span class="powershell-command"># Block all inbound connections except established</span>
+New-NetFirewallRule -DisplayName "Block New Inbound" -Direction Inbound -Action Block -Profile Any
+
+<span class="powershell-command"># Enable logging</span>
+Set-NetFirewallProfile -Profile Domain,Public,Private -LogAllowed True -LogBlocked True -LogMaxSizeKilobytes 4096
+
+<span class="powershell-command"># Monitor firewall logs</span>
+Get-Content "C:\Windows\System32\LogFiles\Firewall\pfirewall.log" -Tail 10
+
+<span class="powershell-command"># Create application-specific rules</span>
+New-NetFirewallRule -DisplayName "Block Calculator" -Direction Outbound -Program "C:\Windows\System32\calc.exe" -Action Block
+                </div>
+                <div class="command-description">
+                    <strong>What this does:</strong> Creates advanced firewall rules for network segmentation, logging, and application-level controls.
+                </div>
+            </div>
+        </div>
+
+        <div class="hardening-card">
+            <h2 class="section-title">
+                <span class="section-icon">🛡️</span>
+                Windows Defender and Antimalware
+            </h2>
+
+            <div class="command-block">
+                <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+<span class="powershell-command"># Check Windows Defender status</span>
+Get-MpComputerStatus
+
+<span class="powershell-command"># Enable real-time protection</span>
+Set-MpPreference -DisableRealtimeMonitoring $false
+
+<span class="powershell-command"># Enable cloud protection</span>
+Set-MpPreference -MAPSReporting Advanced
+Set-MpPreference -SubmitSamplesConsent SendAllSamples
+
+<span class="powershell-command"># Update definitions</span>
+Update-MpSignature
+
+<span class="powershell-command"># Run full system scan</span>
+Start-MpScan -ScanType FullScan
+
+<span class="powershell-command"># Configure exclusions (use carefully)</span>
+Add-MpPreference -ExclusionPath "C:\TrustedFolder"
+Add-MpPreference -ExclusionExtension ".log"
+
+<span class="powershell-command"># Enable controlled folder access</span>
+Set-MpPreference -EnableControlledFolderAccess Enabled
+
+<span class="powershell-command"># Check threat history</span>
+Get-MpThreatDetection | Select-Object ActionSuccess, DetectionTime, InitialDetectionTime
+            </div>
+
+            <div class="security-tip">
+                <h4>💡 Antimalware Best Practices</h4>
+                <ul class="checklist">
+                    <li>Keep real-time protection always enabled</li>
+                    <li>Enable cloud-delivered protection</li>
+                    <li>Run regular full system scans</li>
+                    <li>Minimize exclusions to reduce attack surface</li>
+                    <li>Enable controlled folder access for ransomware protection</li>
+                    <li>Monitor threat detection logs regularly</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="hardening-card">
+            <h2 class="section-title">
+                <span class="section-icon">🔐</span>
+                Registry Security Hardening
+            </h2>
+
+            <div class="vulnerability-alert">
+                <h4>⚠️ Registry Vulnerabilities</h4>
+                <p>The Windows Registry contains critical system settings. Improper configurations can lead to privilege escalation and system compromise.</p>
+            </div>
+
+            <div class="registry-block">
+                <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+<span class="powershell-command"># Disable SMBv1 (prevents WannaCry-style attacks)</span>
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name "SMB1" -Value 0
+
+<span class="powershell-command"># Disable LLMNR (prevents LLMNR poisoning)</span>
+New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Force
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient" -Name "EnableMulticast" -Value 0
+
+<span class="powershell-command"># Disable NetBIOS over TCP/IP</span>
+$adapters = Get-WmiObject -Class Win32_NetworkAdapterConfiguration | Where-Object {$_.IPEnabled -eq $true}
+foreach ($adapter in $adapters) {
+    $adapter.SetTcpipNetbios(2)
+}
+
+<span class="powershell-command"># Enable LSA Protection</span>
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Lsa" -Name "RunAsPPL" -Value 1
+
+<span class="powershell-command"># Disable WDigest authentication</span>
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest" -Name "UseLogonCredential" -Value 0
+
+<span class="powershell-command"># Enable Credential Guard (Windows 10 Enterprise)</span>
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name "EnableVirtualizationBasedSecurity" -Value 1
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\DeviceGuard" -Name "RequirePlatformSecurityFeatures" -Value 1
+            </div>
+
+            <div class="command-description">
+                <strong>What this does:</strong> Modifies critical registry settings to disable vulnerable protocols, enable security features, and protect against common attack vectors.
+            </div>
+        </div>
+
+        <div class="hardening-card">
+            <h2 class="section-title">
+                <span class="section-icon">📋</span>
+                Windows Event Logging and Monitoring
+            </h2>
+
+            <div class="command-block">
+                <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+<span class="powershell-command"># Enable PowerShell logging</span>
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ModuleLogging" -Name "EnableModuleLogging" -Value 1
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging" -Name "EnableScriptBlockLogging" -Value 1
+
+<span class="powershell-command"># Configure security log size</span>
+wevtutil sl Security /ms:1073741824
+
+<span class="powershell-command"># Enable process creation logging</span>
+Set-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit" -Name "ProcessCreationIncludeCmdLine_Enabled" -Value 1
+
+<span class="powershell-command"># Check for failed login attempts</span>
+Get-WinEvent -FilterHashtable @{LogName='Security'; ID=4625} -MaxEvents 10 | Select TimeCreated, Message
+
+<span class="powershell-command"># Monitor privilege escalation attempts</span>
+Get-WinEvent -FilterHashtable @{LogName='Security'; ID=4672} -MaxEvents 5
+
+<span class="powershell-command"># Check for new service installations</span>
+Get-WinEvent -FilterHashtable @{LogName='System'; ID=7045} -MaxEvents 10
+
+<span class="powershell-command"># Export security logs for analysis</span>
+wevtutil epl Security C:\SecurityLogs\Security_$(Get-Date -Format 'yyyyMMdd').evtx
+
+<span class="powershell-command"># Set up log forwarding (to SIEM)</span>
+winrm quickconfig -force
+wecutil cs subscription.xml
+            </div>
+
+            <div class="security-tip">
+                <h4>💡 Key Events to Monitor</h4>
+                <ul>
+                    <li><strong>4624/4625:</strong> Successful/Failed logons</li>
+                    <li><strong>4672:</strong> Special privileges assigned</li>
+                    <li><strong>4697:</strong> Service installed</li>
+                    <li><strong>4698/4699:</strong> Scheduled task created/deleted</li>
+                    <li><strong>4103/4104:</strong> PowerShell execution</li>
+                    <li><strong>1:</strong> Process creation (Sysmon)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="hardening-card">
+            <h2 class="section-title">
+                <span class="section-icon">🚫</span>
+                Disable Unnecessary Services and Features
+            </h2>
+
+            <div class="command-block">
+                <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+<span class="powershell-command"># Disable unnecessary services</span>
+$ServicesToDisable = @(
+    'Fax',
+    'TelnetClnt', 
+    'TFTP',
+    'RemoteRegistry',
+    'RemoteAccess',
+    'TermService'
+)
+
+foreach ($service in $ServicesToDisable) {
+    Stop-Service -Name $service -Force -ErrorAction SilentlyContinue
+    Set-Service -Name $service -StartupType Disabled -ErrorAction SilentlyContinue
+}
+
+<span class="powershell-command"># Remove unnecessary Windows features</span>
+Disable-WindowsOptionalFeature -Online -FeatureName "TelnetClient" -NoRestart
+Disable-WindowsOptionalFeature -Online -FeatureName "TFTP" -NoRestart
+Disable-WindowsOptionalFeature -Online -FeatureName "SMB1Protocol" -NoRestart
+
+<span class="powershell-command"># List all running services</span>
+Get-Service | Where-Object {$_.Status -eq 'Running'} | Select Name, DisplayName, StartType
+
+<span class="powershell-command"># Check installed Windows features</span>
+Get-WindowsOptionalFeature -Online | Where-Object {$_.State -eq 'Enabled'} | Select FeatureName
+            </div>
+
+            <div class="vulnerability-alert">
+                <h4>⚠️ Service Hardening Priority</h4>
+                <p>Unnecessary services increase attack surface. Disable services you don't need, but be careful not to disable critical system services.</p>
+            </div>
+        </div>
+
+        <div class="hardening-card">
+            <h2 class="section-title">
+                <span class="section-icon">🔧</span>
+                Group Policy Security Settings
+            </h2>
+
+            <div class="command-block">
+                <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+<span class="powershell-command"># Apply security templates using secedit</span>
+secedit /configure /db secedit.sdb /cfg C:\Windows\inf\securedc.inf /log C:\secconfig.log
+
+<span class="powershell-command"># Configure password policy</span>
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters" -Name "RequireStrongKey" -Value 1
+
+<span class="powershell-command"># Enable audit policies</span>
+auditpol /set /category:"Logon/Logoff" /success:enable /failure:enable
+auditpol /set /category:"Object Access" /success:enable /failure:enable
+auditpol /set /category:"Privilege Use" /success:enable /failure:enable
+
+<span class="powershell-command"># Configure account lockout policy</span>
+net accounts /lockoutthreshold:5 /lockoutduration:30 /lockoutwindow:30
+
+<span class="powershell-command"># View current audit policy</span>
+auditpol /get /category:*
+
+<span class="powershell-command"># Export security settings</span>
+secedit /export /cfg C:\SecurityBaseline.inf /log C:\export.log
+            </div>
+
+            <div class="security-tip">
+                <h4>💡 Essential Group Policy Settings</h4>
+                <ul class="checklist">
+                    <li>Enable detailed audit logging</li>
+                    <li>Configure strong password policies</li>
+                    <li>Set account lockout thresholds</li>
+                    <li>Disable unused logon types</li>
+                    <li>Configure user rights assignments</li>
+                    <li>Enable security event logging</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="hardening-card">
+            <h2 class="section-title">
+                <span class="section-icon">✅</span>
+                Windows Security Validation
+            </h2>
+
+            <div class="command-block">
+                <button class="copy-button" onclick="copyToClipboard(this)">Copy</button>
+<span class="powershell-command"># Run Windows Security Health Check</span>
+Get-MpComputerStatus | Select AntivirusEnabled, AMServiceEnabled, RealTimeProtectionEnabled
+
+<span class="powershell-command"># Check for missing security updates</span>
+Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 10
+
+<span class="powershell-command"># Validate firewall configuration</span>
+Get-NetFirewallProfile | Select Name, Enabled, DefaultInboundAction
+
+<span class="powershell-command"># Check UAC status</span>
+Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" | Select EnableLUA, ConsentPromptBehaviorAdmin
+
+<span class="powershell-command"># Verify SMBv1 is disabled</span>
+Get-WindowsOptionalFeature -Online -FeatureName SMB1Protocol
+
+<span class="powershell-command"># Generate security report</span>
+$SecurityReport = @{
+    'Antivirus Status' = (Get-MpComputerStatus).AntivirusEnabled
+    'Firewall Status' = (Get-NetFirewallProfile -Profile Domain).Enabled
+    'UAC Status' = (Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System").EnableLUA
+    'Last Boot Time' = (Get-CimInstance Win32_OperatingSystem).LastBootUpTime
+}
+$SecurityReport
+            </div>
+
+            <div class="security-tip">
+                <h4>🎯 Final Windows Hardening Checklist</h4>
+                <ul class="checklist">
+                    <li>Windows Updates are current and automatic updates enabled</li>
+                    <li>UAC is enabled at maximum level</li>
+                    <li>Windows Defender is active with real-time protection</li>
+                    <li>Firewall is enabled with restrictive rules</li>
+                    <li>Unnecessary services and features are disabled</li>
+                    <li>Registry security settings are applied</li>
+                    <li>Comprehensive logging is enabled</li>
+                    <li>Strong password policies are enforced</li>
+                    <li>Account lockout policies are configured</li>
+                    <li>Regular security monitoring is in place</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+
+        function copyToClipboard(button) {
+            const codeBlock = button.parentElement;
+            const text = codeBlock.textContent.replace('Copy', '').trim();
+            navigator.clipboard.writeText(text).then(function() {
+                button.textContent = 'Copied!';
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
